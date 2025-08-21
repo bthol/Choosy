@@ -3,6 +3,21 @@ body {
     color: hsl(0, 55%, 31%);
 }
 
-/* .remove-option-btn {
+.remove-option-btn {
     margin-left: 10px;
-} */
+}
+
+.selected-option-display-container {
+    display: flex;
+    gap: 10px;
+    font-size: x-large;
+    margin-bottom: 16px;
+}
+
+.list-option-style {
+    display: flex;
+}
+
+#select-option-btn {
+    margin-bottom: 16px;
+}

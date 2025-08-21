@@ -14,11 +14,12 @@
     <main>
         <p>Instructions: Type in an option from which you would like to select and click the add button. Then, once you have added all options, you can click the select button to randomly select one of the options.</p>
         <div>
-            <div>selected: <div id="selected-option-display"></div></div>
+            <div class="selected-option-display-container">selected: <div id="selected-option-display"></div></div>
             <button id="select-option-btn">select</button>
         </div>
-        <input id="option-field" type="text" placeholder="option">
+        <input id="option-field" type="text" placeholder="option" autocomplete="false" spellcheck="false">
         <button id="add-option-btn">add</button>
+        <button id="clear-options-btn">clear</button>
         <div class="options-container"></div>
     </main>
     <footer>
