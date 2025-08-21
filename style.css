@@ -11,7 +11,7 @@ body {
     display: flex;
     gap: 10px;
     font-size: x-large;
-    margin-bottom: 16px;
+    margin: 16px 0px;
 }
 
 .list-option-style {

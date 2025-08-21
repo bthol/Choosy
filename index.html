@@ -12,11 +12,19 @@
         <h1>RandOp</h1>
     </header>
     <main>
-        <p>Instructions: Type in an option from which you would like to select and click the add button. Then, once you have added all options, you can click the select button to randomly select one of the options.</p>
+        <p>Instructions</p>
+        <p>1.) Enter each option into the options field and click the add button.</p>
+        <p>2.) Choose the selection method you want using the drop down menu.</p>
+        <p>3.) Click the select button to randomly select one of the options.</p>
         <div>
             <div class="selected-option-display-container">selected: <div id="selected-option-display"></div></div>
             <button id="select-option-btn">select</button>
         </div>
+        <label for="selection-method">Selection Method</label>
+        <select name="selection-method" id="selection-method">
+            <option value="random-order" selected>random order of options</option>
+            <option value="random-option">get a random option</option>
+        </select>
         <input id="option-field" type="text" placeholder="option" autocomplete="false" spellcheck="false">
         <button id="add-option-btn">add</button>
         <button id="clear-options-btn">clear</button>

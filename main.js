@@ -1,7 +1,29 @@
 const optionsContainer = document.querySelector('.options-container');
 let options = [];
+let optionsIndex = 0;
 function selectOption() {
-    document.querySelector('#selected-option-display').innerHTML = options[Math.floor(Math.random() * options.length)];
+    const method = document.querySelector('#selection-method').value;
+    if (method === 'random-order') {
+        if (optionsIndex === 0) {
+            let copy = options;
+            options = [];
+            while (copy.length > 0) {
+                const index = Math.floor(Math.random() * copy.length); 
+                options.push(copy[index]);
+                copy.splice(index, 1);
+            }
+        }
+        document.querySelector('#selected-option-display').innerHTML = options[optionsIndex];
+        optionsIndex += 1;
+        if (optionsIndex === options.length) {
+            optionsIndex = 0;
+        }
+
+        console.log(options);
+        
+    } else if (method === 'random-option') {
+        document.querySelector('#selected-option-display').innerHTML = options[Math.floor(Math.random() * options.length)];
+    }
 };
 function clearOptions() {
     optionsContainer.innerHTML = '';
@@ -33,3 +55,12 @@ function addOption() {
 document.querySelector('#select-option-btn').addEventListener('click', selectOption);
 document.querySelector('#add-option-btn').addEventListener('click', addOption);
 document.querySelector('#clear-options-btn').addEventListener('click', clearOptions);
+document.querySelector('#selection-method').addEventListener('change', () => {
+    let copy = options;
+    options = [];
+    while (copy.length > 0) {
+        const index = Math.floor(Math.random() * copy.length); 
+        options.push(copy[index]);
+        copy.splice(index, 1);
+    }
+});
