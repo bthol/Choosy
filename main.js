@@ -18,8 +18,6 @@ function selectOption() {
         if (optionsIndex === options.length) {
             optionsIndex = 0;
         }
-
-        console.log(options);
         
     } else if (method === 'random-option') {
         document.querySelector('#selected-option-display').innerHTML = options[Math.floor(Math.random() * options.length)];
