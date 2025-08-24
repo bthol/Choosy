@@ -26,15 +26,19 @@
             <div>
                 <div class="selected-option-display-container">Selected: <div id="selected-option-display"></div></div>
             </div>
-            <label for="selection-method">Selection Method</label>
-            <select name="selection-method" id="selection-method">
-                <option value="random-order" selected>random order of options</option>
-                <option value="random-option">get a random option</option>
-            </select>
-            <input id="option-field" type="text" placeholder="add option" autocomplete="false" spellcheck="false">
-            <button id="add-option-btn">add</button>
-            <button id="clear-options-btn">clear</button>
-            <button id="select-option-btn">select</button>
+            <div>
+                <label for="selection-method">Selection Method: </label>
+                <select name="selection-method" id="selection-method">
+                    <option value="random-order" selected>random order of options</option>
+                    <option value="random-option">get a random option</option>
+                </select>
+            </div>
+            <div>
+                <input id="option-field" type="text" placeholder="add option" autocomplete="false" spellcheck="true">
+                <button id="add-option-btn">add</button>
+                <button id="clear-options-btn">clear</button>
+                <button id="select-option-btn">select</button>
+            </div>
             <div class="options-container"></div>
         </div>
     </main>

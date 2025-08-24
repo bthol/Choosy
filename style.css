@@ -64,6 +64,9 @@ main {
     margin-top: 16px;
 }
 
+#user-data > div {
+    margin: 16px 0px;
+}
 
 /* footer */
 
@@ -94,8 +97,4 @@ footer > small {
 
 .list-option-style {
     display: flex;
-}
-
-#select-option-btn {
-    margin-bottom: 16px;
 }
