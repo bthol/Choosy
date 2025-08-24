@@ -1,6 +1,7 @@
 const optionsContainer = document.querySelector('.options-container');
 const selectedDisplay = document.querySelector('#selected-option-display');
 const selectionMethod = document.querySelector('#selection-method');
+const optionField = document.querySelector('#option-field');
 let options = [];
 let optionsIndex = 0;
 function selectOption() {
@@ -29,6 +30,7 @@ function clearOptions() {
     optionsContainer.innerHTML = '';
     options = [];
     selectedDisplay.innerHTML = '';
+    optionField.value = '';
 };
 function removeOption(event) {
     event.target.removeEventListener('click', removeOption);
@@ -42,7 +44,7 @@ function removeOption(event) {
     event.target.parentNode.remove();
 };
 function addOption() {
-    const option = document.querySelector('#option-field').value;
+    const option = optionField.value;
     if (option !== '') {
         options.push(option);
         let optionsHTML = '<ul>';
@@ -77,5 +79,10 @@ selectionMethod.addEventListener('change', () => {
             options.push(copy[index]);
             copy.splice(index, 1);
         }
+    }
+});
+optionField.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        addOption();
     }
 });
