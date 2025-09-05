@@ -1,0 +1,24 @@
+{
+  "name": "choosy",
+  "version": "1.0.0",
+  "description": "**Developer**: Blake Thollaug",
+  "homepage": "https://github.com/bthol/Choosy#readme",
+  "bugs": {
+    "url": "https://github.com/bthol/Choosy/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bthol/Choosy.git"
+  },
+  "license": "ISC",
+  "author": "Blake Thollaug",
+  "type": "module",
+  "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}
