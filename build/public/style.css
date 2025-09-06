@@ -1,0 +1,92 @@
+.theme-default {
+  --background-color-1: hsl(219, 99%, 73%);
+  --background-color-2: hsl(49, 77%, 88%);
+  --background-color-3: hsl(168, 50%, 85%);
+  --border-color: hsl(240, 2%, 60%);
+  --text-color: hsl(0, 97%, 12%);
+  --shadow-color: hsl(244, 50%, 5%);
+}
+
+body {
+  background-color: var(--background-color-2);
+  color: var(--text-color);
+  margin: 0px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}
+
+header {
+  position: relative;
+  z-index: 1;
+  margin: 0px;
+  padding: 8px;
+  background-color: var(--background-color-1);
+  grid-column: 1/span 3;
+  display: grid;
+  box-shadow: 0px 0px 5px var(--shadow-color);
+}
+
+#website-title {
+  font-size: 30px;
+  font-weight: 600;
+  justify-self: center;
+  align-self: center;
+  color: #ffff1a;
+}
+
+.section-separate-style {
+  border-bottom: 2px solid var(--border-color);
+}
+
+main {
+  padding: 0px 8px;
+  background-color: var(--background-color-3);
+  box-shadow: 0px 0px 3vw var(--shadow-color);
+  grid-column: 2/2;
+  width: 800px;
+}
+
+#user-data {
+  margin-top: 16px;
+}
+#user-data > div {
+  margin: 16px 0px;
+}
+
+footer {
+  grid-column: 1/span 3;
+  background-color: var(--background-color-1);
+  display: grid;
+  padding-top: 10px;
+  box-shadow: 0px 0px 2px var(--shadow-color);
+}
+footer > small {
+  justify-self: center;
+  align-self: center;
+}
+
+.remove-option-btn {
+  margin-left: 10px;
+}
+
+.selected-option-display-container {
+  display: flex;
+  gap: 10px;
+  font-size: x-large;
+  margin: 16px 0px;
+}
+
+.list-option-style {
+  display: flex;
+}
+
+@media (max-width: 800px) {
+  main {
+    width: auto;
+    grid-column: 1/span 3;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */

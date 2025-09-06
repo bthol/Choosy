@@ -2,8 +2,8 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    "rootDir": "./src",
-    "outDir": "./dist",
+    "rootDir": "src/scripts",
+    "outDir": "build/scripts",
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
@@ -45,7 +45,7 @@
     "skipLibCheck": true,
   },
   "include": [
-    "src/main.ts"
+    "src/scripts/main.ts"
   ],
   "exclude": [
     "node_modules"

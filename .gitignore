@@ -1,4 +1,13 @@
+# ignore modules
 /node_modules
-/dist/main.d.ts
-/dist/main.d.ts.map
-/dist/main.js.map
+
+# ignore development directories
+build/public/stylesheets
+
+# ignore maps
+/build/scripts/main.d.ts
+/build/scripts/main.d.ts.map
+/build/scripts/main.js.map
+/build/public/style.css.map
+# /build/public/stylesheets/colors.css.map
+# /build/public/stylesheets/index.css.map

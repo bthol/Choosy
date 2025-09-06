@@ -13,12 +13,14 @@
   "license": "ISC",
   "author": "Blake Thollaug",
   "type": "module",
-  "main": "./dist/main.js",
-  "types": "./dist/main.d.ts",
+  "main": "./build/scripts/main.js",
+  "types": "./build/scripts/main.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile-sass": "sass src/public:build/public",
+    "watch-sass": "sass --watch ./src/public/:./build/public/"
   },
   "devDependencies": {
+    "sass": "^1.92.1",
     "typescript": "^5.9.2"
   }
 }
