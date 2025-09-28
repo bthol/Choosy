@@ -17,3 +17,4 @@ The Choosy website architecture is broadly broken into two fundamental parts: 1)
  - automatic typescript compiler:       `$npx tsc --watch`
  - compile sass to css:                 `$npm run compile-sass`
  - automatic sass to css compilation:   `$npm run watch-sass`
+ 

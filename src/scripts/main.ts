@@ -5,31 +5,54 @@ const optionField: HTMLInputElement  | null = document.querySelector('#option-fi
 const selectionOptionBtn: Element | null = document.querySelector('#select-option-btn');
 const addOptionBtn: Element | null = document.querySelector('#add-option-btn');
 const clearOPtionsBtn: Element | null = document.querySelector('#clear-options-btn');
+let optionsIndex: number = 0;
 let options: string[] = [];
-let optionsIndex = 0;
+let optionsRand: string[] | void = [];
+function strArrRandomOrder(ordered: string[]): string[] | void {
+    const max: number = 1000;
+    if (ordered.length < max) {
+        const unordered: string[] = [];
+        let indexes: number[] = [];
+        let indexCount: number = 0;
+        for (const i in ordered) {
+            indexes.push(indexCount);
+            indexCount += 1;
+        }
+        let limiter: number = 0;
+        while (limiter < max && indexes.length > 0) {
+            limiter += 1;
+            const random = Math.floor(Math.random() * indexes.length);
+            const index: number | undefined = indexes[random];
+            if (index !== undefined && ordered[index]) {
+                unordered.push(ordered[index]);
+                indexes.splice(random, 1);
+            } else {
+                console.error('ERROR: no data at index: ' + `${index}`);
+            }
+        }
+        return unordered;
+    } else {
+        console.error('ERROR: exceeded maximum array length');
+    }
+};
+function optionsRandomizeOrder() {
+    optionsRand = strArrRandomOrder(options);
+};
 function selectOption() {
-    if (selectionMethod) {
+    if (selectionMethod && selectedDisplay) {
         const methodStr: string = selectionMethod.value;
         if (methodStr === 'random-order') {
-            if (optionsIndex === 0) {
-                let copy: string[] | undefined = options;
-                options = [];
-                while (copy.length > 0) {
-                    const index: number = Math.floor(Math.random() * copy.length);
-                    if (copy[index]) {
-                        options.push(copy[index]);
-                        copy.splice(index, 1);
-                    }
+            if (optionsRand) {
+                if (optionsIndex === 0) {
+                    optionsRandomizeOrder();
+                }
+                selectedDisplay.innerHTML = `${optionsRand[optionsIndex]}`;
+                optionsIndex += 1;
+                if (optionsIndex === optionsRand.length) {
+                    optionsIndex = 0;
                 }
             }
-            if (selectedDisplay) {
-                selectedDisplay.innerHTML = `${options[optionsIndex]}`;
-            }
-            optionsIndex += 1;
-            if (optionsIndex === options.length) {
-                optionsIndex = 0;
-            }
-        } else if (methodStr === 'random-option' && selectedDisplay) {
+        } else if (methodStr === 'random-option') {
             selectedDisplay.innerHTML = `${options[Math.floor(Math.random() * options.length)]}`;
         }
     }
@@ -80,17 +103,6 @@ function addOption() {
             document.querySelectorAll('.remove-option-btn').forEach((btn) => {
                 btn.addEventListener('click', removeOption);
             });
-            if (selectionMethod.value === 'random-order') {
-                let copy: string[] = options;
-                options = [];
-                while (copy.length > 0) {
-                    const index: number = Math.floor(Math.random() * copy.length);
-                    if (copy[index]) {
-                        options.push(copy[index]);
-                        copy.splice(index, 1);
-                    }
-                }
-            }
         }
     }
 };
@@ -99,22 +111,12 @@ if (selectionOptionBtn && addOptionBtn && clearOPtionsBtn) {
     addOptionBtn.addEventListener('click', addOption);
     clearOPtionsBtn.addEventListener('click', clearOptions);
 } else {
-    console.error('Button(s) not found');
+    console.error('ERROR: Button(s) not found');
 }
 if (selectionMethod) {
     selectionMethod.addEventListener('change', () => {
-        if (options) {
-            if (selectionMethod.value === 'random-order') {
-                let copy = options;
-                options = [];
-                while (copy.length > 0) {
-                    const index = Math.floor(Math.random() * copy.length);
-                    if (copy[index]) {
-                        options.push(copy[index]);
-                        copy.splice(index, 1);
-                    }
-                }
-            }
+        if (selectionMethod.value === 'random-order') {
+            optionsRandomizeOrder();
         }
     });
 }
@@ -125,5 +127,33 @@ if (optionField) {
         }
     });
 } else {
-    console.error('Keyboard compatability degraded');
+    console.error('ERROR: keyboard compatability degraded');
 }
+
+// // remove duplicates
+// let duplicates: number[] = [1, 1, 2, 7, 4, 9, 3, 8, 8, 2, 4];
+// function removeDuplicates(arr: number[]): number[] {
+//     let duplicates: boolean = true;
+//     let found: boolean = false;
+//     while (duplicates) {
+//         found = false;
+//         for (let i = 0; i < arr.length; i++) {
+//             for (let j = i; j < arr.length; j++) {
+//                 if (i !== j && arr[i] === arr[j]) {
+//                     arr.splice(i, 1);
+//                     found = true;
+//                     break;
+//                 }
+//             }
+//             if (i + 1 === arr.length && !found) {
+//                 duplicates = false;
+//             } else if (found) {
+//                 break;
+//             }
+//         }
+//     }
+//     return arr;
+// };
+// console.log('now you see duplicates: ' + duplicates.join(', '));
+// removeDuplicates(duplicates);
+// console.log("now you don't: " + duplicates.join(', '));
