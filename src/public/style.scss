@@ -1,23 +1,16 @@
 @use "./stylesheets/index.scss";
 
-$color_1: var(--text-color);
-$color_2: #ffff1a;
-$background-color_1: var(--background-color-2);
-$background-color_2: var(--background-color-1);
-$background-color_3: var(--background-color-3);
+.default-theme {
+	@include index.set-theme(index.$text-color-default, index.$background-color_1-default, index.$background-color_2-default, index.$background-color_3-default, index.$border-color-default, index.$shadow-color-default);
+}
 
-.theme-default {
-	--background-color-1: hsl(219, 99%, 73%);
-	--background-color-2: hsl(49, 77%, 88%);
-	--background-color-3: hsl(168, 50%, 85%);
-	--border-color: hsl(240, 2%, 60%);
-	--text-color: hsl(0, 97%, 12%);
-	--shadow-color: hsl(244, 50%, 5%);
+.dark-theme {
+	@include index.set-theme(index.$text-color-dark, index.$background-color_1-dark, index.$background-color_2-dark, index.$background-color_3-dark, index.$border-color-dark, index.$shadow-color-dark);
 }
 
 body {
-	background-color: $background-color_1;
-	color: $color_1;
+	background-color: var(--background-color-1);
+	color: var(--text-color);
 	margin: 0px;
 	display: grid;
 	grid-template-columns: 1fr auto 1fr;
@@ -30,7 +23,7 @@ header {
 	z-index: 1;
 	margin: 0px;
 	padding: 8px;
-	background-color: $background-color_2;
+	background-color: var(--background-color-2);
 	grid-column: 1 / span 3;
 	display: grid;
 	box-shadow: 0px 0px 5px var(--shadow-color);
@@ -41,7 +34,7 @@ header {
 	font-weight: 600;
 	justify-self: center;
 	align-self: center;
-	color: $color_2;
+	color: index.$title-color;
 }
 
 .section-separate-style {
@@ -50,7 +43,7 @@ header {
 
 main {
 	padding: 0px 8px;
-	background-color: $background-color_3;
+	background-color: var(--background-color-3);
 	box-shadow: 0px 0px 3vw var(--shadow-color);
 	grid-column: 2 / 2;
 	width: 800px;
@@ -65,7 +58,7 @@ main {
 
 footer {
 	grid-column: 1 / span 3;
-	background-color: $background-color_2;
+	background-color: var(--background-color-2);
 	display: grid;
 	padding-top: 10px;
 	box-shadow: 0px 0px 2px var(--shadow-color);

@@ -129,31 +129,3 @@ if (optionField) {
 } else {
     console.error('ERROR: keyboard compatability degraded');
 }
-
-// // remove duplicates
-// let duplicates: number[] = [1, 1, 2, 7, 4, 9, 3, 8, 8, 2, 4];
-// function removeDuplicates(arr: number[]): number[] {
-//     let duplicates: boolean = true;
-//     let found: boolean = false;
-//     while (duplicates) {
-//         found = false;
-//         for (let i = 0; i < arr.length; i++) {
-//             for (let j = i; j < arr.length; j++) {
-//                 if (i !== j && arr[i] === arr[j]) {
-//                     arr.splice(i, 1);
-//                     found = true;
-//                     break;
-//                 }
-//             }
-//             if (i + 1 === arr.length && !found) {
-//                 duplicates = false;
-//             } else if (found) {
-//                 break;
-//             }
-//         }
-//     }
-//     return arr;
-// };
-// console.log('now you see duplicates: ' + duplicates.join(', '));
-// removeDuplicates(duplicates);
-// console.log("now you don't: " + duplicates.join(', '));

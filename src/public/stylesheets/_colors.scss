@@ -1,0 +1,20 @@
+// stylesheet for colors
+
+// constant colors
+$title-color: hsl(60, 100%, 55%);
+
+// default theme
+$text-color-default: hsl(0, 97%, 12%);
+$background-color_1-default: hsl(49, 77%, 88%);
+$background-color_2-default: hsl(219, 99%, 73%);
+$background-color_3-default: hsl(168, 50%, 85%);
+$border-color-default: hsl(240, 2%, 60%);
+$shadow-color-default: hsl(244, 50%, 5%);
+
+// dark theme
+$text-color-dark: hsl(0, 97%, 12%);
+$background-color_1-dark: hsl(49, 77%, 88%);
+$background-color_2-dark: hsl(0, 0%, 0%);
+$background-color_3-dark: hsl(168, 50%, 85%);
+$border-color-dark: hsl(240, 2%, 60%);
+$shadow-color-dark: hsl(244, 50%, 5%);
