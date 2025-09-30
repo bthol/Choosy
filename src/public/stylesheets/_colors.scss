@@ -1,20 +1,29 @@
 // stylesheet for colors
 
-// constant colors
-$title-color: hsl(60, 100%, 55%);
+// website title
+$title-color: hsl(3, 99%, 52%);
+$title-color-background: hsl(49, 40%, 96%);
+$title-color-border: hsl(240, 2%, 40%);
+
+// gradient
+$grad-1: rgba(194, 147, 147, 1);
+$grad-2: rgba(237, 221, 83, 1);
+$grad-3: rgba(249, 247, 241, 1);
 
 // default theme
-$text-color-default: hsl(0, 97%, 12%);
-$background-color_1-default: hsl(49, 77%, 88%);
-$background-color_2-default: hsl(219, 99%, 73%);
-$background-color_3-default: hsl(168, 50%, 85%);
-$border-color-default: hsl(240, 2%, 60%);
-$shadow-color-default: hsl(244, 50%, 5%);
+$text-color-1_default: hsl(0, 97%, 20%);
+$text-color-2_default: hsl(0, 3%, 82%);
+$background-color-1_default: hsl(49, 70%, 88%);
+$background-color-2_default: hsl(60, 88%, 67%);
+$background-color-3_default: hsl(49, 40%, 96%);
+$border-color_default: hsl(240, 2%, 60%);
+$shadow-color_default: hsl(244, 50%, 7%);
 
 // dark theme
-$text-color-dark: hsl(0, 97%, 12%);
-$background-color_1-dark: hsl(49, 77%, 88%);
-$background-color_2-dark: hsl(0, 0%, 0%);
-$background-color_3-dark: hsl(168, 50%, 85%);
-$border-color-dark: hsl(240, 2%, 60%);
-$shadow-color-dark: hsl(244, 50%, 5%);
+$text-color-1_dark: hsl(0, 97%, 12%);
+$text-color-2_dark: hsl(0, 3%, 82%);
+$background-color-1_dark: hsl(49, 77%, 88%);
+$background-color-2_dark: hsl(219, 99%, 73%);
+$background-color-3_dark: hsl(168, 50%, 85%);
+$border-color_dark: hsl(240, 2%, 60%);
+$shadow-color_dark: hsl(244, 50%, 5%);
