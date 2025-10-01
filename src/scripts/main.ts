@@ -1,7 +1,10 @@
+// ['#DB0F0F', '#DB780F', '#DBC70F', '#5adb0fff'];
+const optionColors: string[] = ['hsla(0, 98%, 72%, 1.00)', 'hsla(100, 98%, 42%, 1.00)', 'hsla(240, 98%, 77%, 1.00)'];
+let optionColorsIndex: number = 0;
 let optionsIndex: number = 0;
 let options: string[] = [];
-let optionsRand: string[] | void = [];
-function optionsRandomizeOrder() {
+let optionsRand: string[] = [];
+function optionsRandomizeOrder(): void {
     const max: number = 1000;
     if (options.length < max) {
         const unordered: string[] = [];
@@ -28,7 +31,7 @@ function optionsRandomizeOrder() {
         console.error('ERROR: exceeded maximum array length');
     }
 };
-function selectOption() {
+function selectOption(): void {
     const selectedDisplay: HTMLElement | null = document.querySelector('#selected-option-display');
     const selectionMethod: HTMLSelectElement  | null = document.querySelector('#selection-method');
     if (selectionMethod && selectedDisplay) {
@@ -38,18 +41,27 @@ function selectOption() {
                 if (optionsIndex === 0) {
                     optionsRandomizeOrder();
                 }
-                selectedDisplay.innerHTML = `${optionsRand[optionsIndex]}`;
+                const choice: string | undefined = optionsRand[optionsIndex];
+                selectedDisplay.innerHTML = `${choice}`;
+                options.forEach((option, index) => {
+                    if (option === choice) {
+                        selectedDisplay.setAttribute('style', `background-color: ${optionColors[index % optionColors.length]}`);
+                    }
+                });
+                
                 optionsIndex += 1;
                 if (optionsIndex === optionsRand.length) {
                     optionsIndex = 0;
                 }
             }
         } else if (methodStr === 'random-option') {
-            selectedDisplay.innerHTML = `${options[Math.floor(Math.random() * options.length)]}`;
+            const i: number = Math.floor(Math.random() * options.length);
+            selectedDisplay.innerHTML = `${options[i]}`;
+            selectedDisplay.setAttribute('style', `background-color: ${optionColors[i % optionColors.length]}`);
         }
     }
 };
-function clearOptions() {
+function clearOptions(): void {
     const optionsContainer: HTMLElement | null = document.querySelector('.options-container');
     const selectedDisplay: HTMLElement | null = document.querySelector('#selected-option-display');
     const optionField: HTMLInputElement  | null = document.querySelector('#option-field');
@@ -64,71 +76,104 @@ function clearOptions() {
         optionField.value = '';
     }
 };
-function removeOption(event: Event) {
+function removeOption(event: Event): void {
     if (options && event.currentTarget && event.currentTarget && event.target) {
         const node: Node = event.target as Node;
         const parent: HTMLElement | null = node.parentElement;
         if (parent) {
-            const listItem: HTMLElement | null = parent.querySelector('li');
-            if (listItem) {
-                const content: string = listItem.textContent;
+            const div: HTMLElement | null = parent.querySelector('div');
+            if (div) {
+                const content: string = div.textContent;
                 for (let i = 0; i < options.length; i++) {
                     if (options[i] === content) {
                         options.splice(i, 1);
                         break;
                     }
                 }
+                for (let i = 0; i < optionsRand.length; i++) {
+                    if (optionsRand[i] === content) {
+                        optionsRand.splice(i, 1);
+                        break;
+                    }
+                }
+                if (optionsIndex > optionsRand.length - 1) {
+                    optionsIndex = 0;
+                }
                 parent.remove();
+                updateOptions();
             }
         }
     }
 };
-function addOption() {
+function updateOptions(): void {
+    const optionsContainer: HTMLElement | null = document.querySelector('.options-container');
+    if (optionsContainer) {
+        optionColorsIndex = 0;
+        let optionsHTML = '';
+        for (let i = 0; i < options.length; i++) {
+            optionsHTML += `<div class="list-option-style" style="background-color:${optionColors[optionColorsIndex]}"><div>${options[i]}</div><button class="remove-option-btn">x</button></div>`;
+            optionColorsIndex += 1;
+            if (optionColorsIndex === optionColors.length) {
+                optionColorsIndex = 0;
+            }
+        }
+        document.querySelectorAll('.remove-option-btn').forEach((btn) => {
+            btn.removeEventListener('click', removeOption);
+        });
+        optionsContainer.innerHTML = `${optionsHTML}`;
+        document.querySelectorAll('.remove-option-btn').forEach((btn) => {
+            btn.addEventListener('click', removeOption, {once: true});
+        });
+    } else {
+        console.error('ERROR: options not updated');
+    }
+};
+function addOption(): void {
     const optionField: HTMLInputElement | null = document.querySelector('#option-field');
     const optionsContainer: HTMLElement | null = document.querySelector('.options-container');
-    const selectionMethod: HTMLSelectElement  | null = document.querySelector('#selection-method');
+    const selectionMethod: HTMLSelectElement | null = document.querySelector('#selection-method');
     if (optionField) {
         const option: string = optionField.value;
+        optionField.value = '';
         if (option && optionsContainer && selectionMethod) {
             options.push(option);
-            let optionsHTML = '<ul>';
-            for (let i = 0; i < options.length; i++) {
-                optionsHTML += `<div class="list-option-style"><li>${options[i]}</li><button class="remove-option-btn">remove</button></div>`;
-            }
-            optionsHTML += '</ul>';
-            optionsContainer.innerHTML = `${optionsHTML}`;
-            document.querySelectorAll('.remove-option-btn').forEach((btn) => {
-                btn.addEventListener('click', removeOption, {once: true});
-            });
+            updateOptions();
         }
     }
 };
 function goPage(pageNumber: Number) {
     if (pageNumber === 0) { // choose page
-        // clear page
         const main: HTMLElement | null = document.querySelector('main');
         if (main) {
+            // clear data
+            options = [];
+            optionsRand = [];
+            // clear page
             main.innerHTML = '';
             // build page
             const section1: HTMLElement = document.createElement('section');
             section1.setAttribute('id', 'user-data');
-            section1.setAttribute('class', 'section-separate-style');
+            section1.setAttribute('class', 'section-separate-style section-margins');
             const pageTitle: HTMLElement = document.createElement('h2');
             pageTitle.innerText = 'Choose';
             const div1: HTMLElement = document.createElement('div');
-            div1.innerHTML = `<div class="selected-option-display-container"><div>Choice:</div><div id="selected-option-display"></div></div>`;
+            div1.innerHTML = `<label for="selection-method">Selection Method: </label><select name="selection-method" id="selection-method"><option value="random-order" selected>random order of options</option><option value="random-option">get a random option</option></select>`;
             const div2: HTMLElement = document.createElement('div');
-            div2.innerHTML = `<label for="selection-method">Selection Method: </label><select name="selection-method" id="selection-method"><option value="random-order" selected>random order of options</option><option value="random-option">get a random option</option></select>`;
+            div2.innerHTML = `<input id="option-field" type="text" placeholder="add option" autocomplete="false" spellcheck="true" autofocus> <button id="add-option-btn">add</button> <button id="clear-options-btn">clear</button> <button id="select-option-btn">select</button>`;
+            const section2: HTMLElement = document.createElement('section');
+            section2.setAttribute('id', 'user-data');
+            section2.setAttribute('class', 'section-separate-style section-margins');
             const div3: HTMLElement = document.createElement('div');
-            div3.innerHTML = `<input id="option-field" type="text" placeholder="add option" autocomplete="false" spellcheck="true" autofocus> <button id="add-option-btn">add</button> <button id="clear-options-btn">clear</button> <button id="select-option-btn">select</button>`;
+            div3.innerHTML = `<div class="selected-option-display-container"><div id="selected-option-display" class="list-option-style"></div></div>`;
             const div4: HTMLElement = document.createElement('div');
             div4.setAttribute('class', 'options-container');
             section1.appendChild(pageTitle);
             section1.appendChild(div1);
             section1.appendChild(div2);
-            section1.appendChild(div3);
-            section1.appendChild(div4);
+            section2.appendChild(div3);
+            section2.appendChild(div4);
             main.appendChild(section1);
+            main.appendChild(section2);
             // scan page
             const selectionOptionBtn: Element | null = document.querySelector('#select-option-btn');
             const addOptionBtn: Element | null = document.querySelector('#add-option-btn');
@@ -178,9 +223,12 @@ function goPage(pageNumber: Number) {
         if (clearOPtionsBtn) {
             clearOPtionsBtn.removeEventListener('click', clearOptions);
         }
-        // clear page
         const main: HTMLElement | null = document.querySelector('main');
         if (main) {
+            // clear data
+            options = [];
+            optionsRand = [];
+            // clear page
             main.innerHTML = '';
             // build page
             const section1: HTMLElement = document.createElement('section');
@@ -215,9 +263,12 @@ function goPage(pageNumber: Number) {
         if (clearOPtionsBtn) {
             clearOPtionsBtn.removeEventListener('click', clearOptions);
         }
-        // clear page
         const main: HTMLElement | null = document.querySelector('main');
         if (main) {
+            // clear data
+            options = [];
+            optionsRand = [];
+            // clear page
             main.innerHTML = '';
             // build page
             const section1: HTMLElement = document.createElement('section');
@@ -225,7 +276,7 @@ function goPage(pageNumber: Number) {
             const pageTitle: HTMLElement = document.createElement('h2');
             pageTitle.innerText = 'About';
             const p1: HTMLElement = document.createElement('p');
-            p1.innerText = 'Choosy is a simple website for random option selection. Need help choosing? Choose Choosy!';
+            p1.innerText = 'Choosy is a simple website for random option selection. Need to choose? Choose Choosy!';
             section1.appendChild(pageTitle);
             section1.appendChild(p1);
             main.appendChild(section1);

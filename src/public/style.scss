@@ -79,7 +79,7 @@ main {
 	width: 800px;
 }
 
-#user-data {
+.section-margins {
 	margin-top: 16px;
 	> div {
 		margin: 16px 0px;
@@ -101,6 +101,10 @@ footer {
 
 .remove-option-btn {
 	margin-left: 10px;
+	padding: 0px 5px 2px 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .selected-option-display-container {
@@ -108,10 +112,22 @@ footer {
 	gap: 10px;
 	font-size: x-large;
 	margin: 16px 0px;
+	@include index.grid-center;
+}
+
+#selected-option-display {
+	grid-column: 2;
+}
+
+.options-container {
+	@include index.grid-center;
 }
 
 .list-option-style {
-	display: flex;
+	display: grid;
+	grid-template-columns: 10fr 1fr;
+	border-radius: 5px;
+	padding: 8px;
 }
 
 @media (max-width: 800px) {

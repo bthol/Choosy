@@ -1,4 +1,7 @@
 "use strict";
+// ['#DB0F0F', '#DB780F', '#DBC70F', '#5adb0fff'];
+var optionColors = ['hsla(0, 98%, 72%, 1.00)', 'hsla(100, 98%, 42%, 1.00)', 'hsla(240, 98%, 77%, 1.00)'];
+var optionColorsIndex = 0;
 var optionsIndex = 0;
 var options = [];
 var optionsRand = [];
@@ -42,7 +45,13 @@ function selectOption() {
                 if (optionsIndex === 0) {
                     optionsRandomizeOrder();
                 }
-                selectedDisplay.innerHTML = "".concat(optionsRand[optionsIndex]);
+                var choice_1 = optionsRand[optionsIndex];
+                selectedDisplay.innerHTML = "".concat(choice_1);
+                options.forEach(function (option, index) {
+                    if (option === choice_1) {
+                        selectedDisplay.setAttribute('style', "background-color: ".concat(optionColors[index % optionColors.length]));
+                    }
+                });
                 optionsIndex += 1;
                 if (optionsIndex === optionsRand.length) {
                     optionsIndex = 0;
@@ -50,7 +59,9 @@ function selectOption() {
             }
         }
         else if (methodStr === 'random-option') {
-            selectedDisplay.innerHTML = "".concat(options[Math.floor(Math.random() * options.length)]);
+            var i = Math.floor(Math.random() * options.length);
+            selectedDisplay.innerHTML = "".concat(options[i]);
+            selectedDisplay.setAttribute('style', "background-color: ".concat(optionColors[i % optionColors.length]));
         }
     }
 }
@@ -76,18 +87,53 @@ function removeOption(event) {
         var node = event.target;
         var parent_1 = node.parentElement;
         if (parent_1) {
-            var listItem = parent_1.querySelector('li');
-            if (listItem) {
-                var content = listItem.textContent;
+            var div = parent_1.querySelector('div');
+            if (div) {
+                var content = div.textContent;
                 for (var i = 0; i < options.length; i++) {
                     if (options[i] === content) {
                         options.splice(i, 1);
                         break;
                     }
                 }
+                for (var i = 0; i < optionsRand.length; i++) {
+                    if (optionsRand[i] === content) {
+                        optionsRand.splice(i, 1);
+                        break;
+                    }
+                }
+                if (optionsIndex > optionsRand.length - 1) {
+                    optionsIndex = 0;
+                }
                 parent_1.remove();
+                updateOptions();
             }
         }
+    }
+}
+;
+function updateOptions() {
+    var optionsContainer = document.querySelector('.options-container');
+    if (optionsContainer) {
+        optionColorsIndex = 0;
+        var optionsHTML = '';
+        for (var i = 0; i < options.length; i++) {
+            optionsHTML += "<div class=\"list-option-style\" style=\"background-color:".concat(optionColors[optionColorsIndex], "\"><div>").concat(options[i], "</div><button class=\"remove-option-btn\">x</button></div>");
+            optionColorsIndex += 1;
+            if (optionColorsIndex === optionColors.length) {
+                optionColorsIndex = 0;
+            }
+        }
+        document.querySelectorAll('.remove-option-btn').forEach(function (btn) {
+            btn.removeEventListener('click', removeOption);
+        });
+        optionsContainer.innerHTML = "".concat(optionsHTML);
+        document.querySelectorAll('.remove-option-btn').forEach(function (btn) {
+            btn.addEventListener('click', removeOption, { once: true });
+        });
+    }
+    else {
+        console.error('ERROR: options not updated');
     }
 }
 ;
@@ -97,47 +143,47 @@ function addOption() {
     var selectionMethod = document.querySelector('#selection-method');
     if (optionField) {
         var option = optionField.value;
+        optionField.value = '';
         if (option && optionsContainer && selectionMethod) {
             options.push(option);
-            var optionsHTML = '<ul>';
-            for (var i = 0; i < options.length; i++) {
-                optionsHTML += "<div class=\"list-option-style\"><li>".concat(options[i], "</li><button class=\"remove-option-btn\">remove</button></div>");
-            }
-            optionsHTML += '</ul>';
-            optionsContainer.innerHTML = "".concat(optionsHTML);
-            document.querySelectorAll('.remove-option-btn').forEach(function (btn) {
-                btn.addEventListener('click', removeOption, { once: true });
-            });
+            updateOptions();
         }
     }
 }
 ;
 function goPage(pageNumber) {
     if (pageNumber === 0) { // choose page
-        // clear page
         var main = document.querySelector('main');
         if (main) {
+            // clear data
+            options = [];
+            optionsRand = [];
+            // clear page
             main.innerHTML = '';
             // build page
             var section1 = document.createElement('section');
             section1.setAttribute('id', 'user-data');
-            section1.setAttribute('class', 'section-separate-style');
+            section1.setAttribute('class', 'section-separate-style section-margins');
             var pageTitle = document.createElement('h2');
             pageTitle.innerText = 'Choose';
             var div1 = document.createElement('div');
-            div1.innerHTML = "<div class=\"selected-option-display-container\"><div>Choice:</div><div id=\"selected-option-display\"></div></div>";
+            div1.innerHTML = "<label for=\"selection-method\">Selection Method: </label><select name=\"selection-method\" id=\"selection-method\"><option value=\"random-order\" selected>random order of options</option><option value=\"random-option\">get a random option</option></select>";
             var div2 = document.createElement('div');
-            div2.innerHTML = "<label for=\"selection-method\">Selection Method: </label><select name=\"selection-method\" id=\"selection-method\"><option value=\"random-order\" selected>random order of options</option><option value=\"random-option\">get a random option</option></select>";
+            div2.innerHTML = "<input id=\"option-field\" type=\"text\" placeholder=\"add option\" autocomplete=\"false\" spellcheck=\"true\" autofocus> <button id=\"add-option-btn\">add</button> <button id=\"clear-options-btn\">clear</button> <button id=\"select-option-btn\">select</button>";
+            var section2 = document.createElement('section');
+            section2.setAttribute('id', 'user-data');
+            section2.setAttribute('class', 'section-separate-style section-margins');
             var div3 = document.createElement('div');
-            div3.innerHTML = "<input id=\"option-field\" type=\"text\" placeholder=\"add option\" autocomplete=\"false\" spellcheck=\"true\" autofocus> <button id=\"add-option-btn\">add</button> <button id=\"clear-options-btn\">clear</button> <button id=\"select-option-btn\">select</button>";
+            div3.innerHTML = "<div class=\"selected-option-display-container\"><div id=\"selected-option-display\" class=\"list-option-style\"></div></div>";
             var div4 = document.createElement('div');
             div4.setAttribute('class', 'options-container');
             section1.appendChild(pageTitle);
             section1.appendChild(div1);
             section1.appendChild(div2);
-            section1.appendChild(div3);
-            section1.appendChild(div4);
+            section2.appendChild(div3);
+            section2.appendChild(div4);
             main.appendChild(section1);
+            main.appendChild(section2);
             // scan page
             var selectionOptionBtn_1 = document.querySelector('#select-option-btn');
             var addOptionBtn_1 = document.querySelector('#add-option-btn');
@@ -190,9 +236,12 @@ function goPage(pageNumber) {
         if (clearOPtionsBtn_2) {
             clearOPtionsBtn_2.removeEventListener('click', clearOptions);
         }
-        // clear page
         var main = document.querySelector('main');
         if (main) {
+            // clear data
+            options = [];
+            optionsRand = [];
+            // clear page
             main.innerHTML = '';
             // build page
             var section1 = document.createElement('section');
@@ -229,9 +278,12 @@ function goPage(pageNumber) {
         if (clearOPtionsBtn_3) {
             clearOPtionsBtn_3.removeEventListener('click', clearOptions);
         }
-        // clear page
         var main = document.querySelector('main');
         if (main) {
+            // clear data
+            options = [];
+            optionsRand = [];
+            // clear page
             main.innerHTML = '';
             // build page
             var section1 = document.createElement('section');
@@ -239,7 +291,7 @@ function goPage(pageNumber) {
             var pageTitle = document.createElement('h2');
             pageTitle.innerText = 'About';
             var p1 = document.createElement('p');
-            p1.innerText = 'Choosy is a simple website for random option selection. Need help choosing? Choose Choosy!';
+            p1.innerText = 'Choosy is a simple website for random option selection. Need to choose? Choose Choosy!';
             section1.appendChild(pageTitle);
             section1.appendChild(p1);
             main.appendChild(section1);

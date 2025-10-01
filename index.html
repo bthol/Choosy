@@ -28,11 +28,8 @@
     </nav>
 
     <main>
-        <section id="user-data" class="section-separate-style">
+        <section class="section-separate-style section-margins">
             <h2>Choose</h2>
-            <div>
-                <div class="selected-option-display-container"><div>Choice:</div><div id="selected-option-display"></div></div>
-            </div>
             <div>
                 <label for="selection-method">Selection Method: </label>
                 <select name="selection-method" id="selection-method">
@@ -46,9 +43,14 @@
                 <button id="clear-options-btn">clear</button>
                 <button id="select-option-btn">select</button>
             </div>
-            <div class="options-container"></div>
         </section>
 
+        <section class="section-separate-style section-margins">
+            <div>
+                <div class="selected-option-display-container"><div id="selected-option-display" class="list-option-style"></div></div>
+            </div>
+            <div class="options-container"></div>
+        </section>
     </main>
 
     <footer>

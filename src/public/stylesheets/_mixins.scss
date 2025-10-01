@@ -25,3 +25,9 @@
 // 	background: linear-gradient(90deg, rgba(194, 147, 147, 1) 0%, rgba(249, 247, 241, 1) 20%, rgba(249, 247, 241, 1) 80%, rgba(237, 221, 83, 1) 100%);
 // 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#C29393", endColorstr="#EDDD53", GradientType=1);
 // }
+
+@mixin grid-center {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	gap: 10px;
+}
