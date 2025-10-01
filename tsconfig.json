@@ -5,13 +5,23 @@
     "rootDir": "src/scripts",
     "outDir": "build/scripts",
 
+    "allowJs": false,
+
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
+    
     "module": "none",
+    
+    // "module": "es2015",
+    // "emitDeclarationOnly": true,
+    // // "noEmit": true,
+    // "allowImportingTsExtensions": true,
+
     // "module": "nodenext",
     // "target": "es2022",
     // "moduleResolution": "node16",
     // "esModuleInterop": true,
+    
     // For nodejs:
     // "types": [],
     // "lib": ["esnext"],
@@ -44,10 +54,13 @@
     // "moduleDetection": "force",
     "skipLibCheck": true,
   },
-  "include": [
-    "src/scripts/main.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  // "include": [
+  //   "src/scripts/main.ts"
+  // ],
+  // "exclude": [
+  //   "node_modules"
+  // ],
+  // "references": [
+  //   {"path": "" }
+  // ]
 }
