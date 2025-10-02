@@ -2,12 +2,12 @@
 const optionColors: string[] = ['hsla(0, 98%, 72%, 1.00)', 'hsla(100, 98%, 42%, 1.00)', 'hsla(240, 98%, 77%, 1.00)'];
 let optionColorsIndex: number = 0;
 let optionsIndex: number = 0;
-let options: string[] = [];
-let optionsRand: string[] = [];
+let options: {option: string}[] = [];
+let optionsRand: number[] = [];
 function optionsRandomizeOrder(): void {
     const max: number = 1000;
     if (options.length < max) {
-        const unordered: string[] = [];
+        const unordered: number[] = [];
         let indexes: number[] = [];
         let indexCount: number = 0;
         for (const i in options) {
@@ -20,7 +20,7 @@ function optionsRandomizeOrder(): void {
             const random = Math.floor(Math.random() * indexes.length);
             const index: number | undefined = indexes[random];
             if (index !== undefined && options[index]) {
-                unordered.push(options[index]);
+                unordered.push(index);
                 indexes.splice(random, 1);
             } else {
                 console.error('ERROR: no data at index: ' + `${index}`);
@@ -41,22 +41,26 @@ function selectOption(): void {
                 if (optionsIndex === 0) {
                     optionsRandomizeOrder();
                 }
-                const choice: string | undefined = optionsRand[optionsIndex];
-                selectedDisplay.innerHTML = `${choice}`;
-                options.forEach((option, index) => {
-                    if (option === choice) {
-                        selectedDisplay.setAttribute('style', `background-color: ${optionColors[index % optionColors.length]}`);
+                const index: number | undefined = optionsRand[optionsIndex];
+                if (index !== undefined) {
+                    const choice: string | undefined = options[index]?.option;
+                    selectedDisplay.innerHTML = `${choice}`;
+                    options.forEach((option, index) => {
+                        if (option.option === choice) {
+                            selectedDisplay.setAttribute('style', `background-color: ${optionColors[index % optionColors.length]}`);
+                        }
+                    });
+                    optionsIndex += 1;
+                    if (optionsIndex === optionsRand.length) {
+                        optionsIndex = 0;
                     }
-                });
-                
-                optionsIndex += 1;
-                if (optionsIndex === optionsRand.length) {
-                    optionsIndex = 0;
+                } else {
+                    console.error('ERROR: data not found at index during selection');
                 }
             }
         } else if (methodStr === 'random-option') {
             const i: number = Math.floor(Math.random() * options.length);
-            selectedDisplay.innerHTML = `${options[i]}`;
+            selectedDisplay.innerHTML = `${options[i]?.option}`;
             selectedDisplay.setAttribute('style', `background-color: ${optionColors[i % optionColors.length]}`);
         }
     }
@@ -71,6 +75,7 @@ function clearOptions(): void {
     }
     if (selectedDisplay) {
         selectedDisplay.innerHTML = '';
+        selectedDisplay.setAttribute('style', 'background: none');
     }
     if (optionField) {
         optionField.value = '';
@@ -85,13 +90,14 @@ function removeOption(event: Event): void {
             if (div) {
                 const content: string = div.textContent;
                 for (let i = 0; i < options.length; i++) {
-                    if (options[i] === content) {
+                    if (options[i]?.option === content) {
                         options.splice(i, 1);
                         break;
                     }
                 }
                 for (let i = 0; i < optionsRand.length; i++) {
-                    if (optionsRand[i] === content) {
+                    const index: number | undefined = optionsRand[i];
+                    if (index && options[index]?.option === content) {
                         optionsRand.splice(i, 1);
                         break;
                     }
@@ -111,7 +117,7 @@ function updateOptions(): void {
         optionColorsIndex = 0;
         let optionsHTML = '';
         for (let i = 0; i < options.length; i++) {
-            optionsHTML += `<div class="list-option-style" style="background-color:${optionColors[optionColorsIndex]}"><div>${options[i]}</div><button class="remove-option-btn">x</button></div>`;
+            optionsHTML += `<div class="list-option-style" style="background-color:${optionColors[optionColorsIndex]}"><div>${options[i]?.option}</div><button class="remove-option-btn">x</button></div>`;
             optionColorsIndex += 1;
             if (optionColorsIndex === optionColors.length) {
                 optionColorsIndex = 0;
@@ -133,9 +139,10 @@ function addOption(): void {
     const optionsContainer: HTMLElement | null = document.querySelector('.options-container');
     const selectionMethod: HTMLSelectElement | null = document.querySelector('#selection-method');
     if (optionField) {
-        const option: string = optionField.value;
+        const optionStr: string = optionField.value;
         optionField.value = '';
-        if (option && optionsContainer && selectionMethod) {
+        if (optionStr && optionsContainer && selectionMethod) {
+            const option: {option: string} = {option: optionStr};
             options.push(option);
             updateOptions();
         }

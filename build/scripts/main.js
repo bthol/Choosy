@@ -21,7 +21,7 @@ function optionsRandomizeOrder() {
             var random = Math.floor(Math.random() * indexes.length);
             var index = indexes[random];
             if (index !== undefined && options[index]) {
-                unordered.push(options[index]);
+                unordered.push(index);
                 indexes.splice(random, 1);
             }
             else {
@@ -36,6 +36,7 @@ function optionsRandomizeOrder() {
 }
 ;
 function selectOption() {
+    var _a, _b;
     var selectedDisplay = document.querySelector('#selected-option-display');
     var selectionMethod = document.querySelector('#selection-method');
     if (selectionMethod && selectedDisplay) {
@@ -45,22 +46,28 @@ function selectOption() {
                 if (optionsIndex === 0) {
                     optionsRandomizeOrder();
                 }
-                var choice_1 = optionsRand[optionsIndex];
-                selectedDisplay.innerHTML = "".concat(choice_1);
-                options.forEach(function (option, index) {
-                    if (option === choice_1) {
-                        selectedDisplay.setAttribute('style', "background-color: ".concat(optionColors[index % optionColors.length]));
+                var index = optionsRand[optionsIndex];
+                if (index !== undefined) {
+                    var choice_1 = (_a = options[index]) === null || _a === void 0 ? void 0 : _a.option;
+                    selectedDisplay.innerHTML = "".concat(choice_1);
+                    options.forEach(function (option, index) {
+                        if (option.option === choice_1) {
+                            selectedDisplay.setAttribute('style', "background-color: ".concat(optionColors[index % optionColors.length]));
+                        }
+                    });
+                    optionsIndex += 1;
+                    if (optionsIndex === optionsRand.length) {
+                        optionsIndex = 0;
                     }
-                });
-                optionsIndex += 1;
-                if (optionsIndex === optionsRand.length) {
-                    optionsIndex = 0;
+                }
+                else {
+                    console.error('ERROR: data not found at index during selection');
                 }
             }
         }
         else if (methodStr === 'random-option') {
             var i = Math.floor(Math.random() * options.length);
-            selectedDisplay.innerHTML = "".concat(options[i]);
+            selectedDisplay.innerHTML = "".concat((_b = options[i]) === null || _b === void 0 ? void 0 : _b.option);
             selectedDisplay.setAttribute('style', "background-color: ".concat(optionColors[i % optionColors.length]));
         }
     }
@@ -76,6 +83,7 @@ function clearOptions() {
     }
     if (selectedDisplay) {
         selectedDisplay.innerHTML = '';
+        selectedDisplay.setAttribute('style', 'background: none');
     }
     if (optionField) {
         optionField.value = '';
@@ -83,6 +91,7 @@ function clearOptions() {
 }
 ;
 function removeOption(event) {
+    var _a, _b;
     if (options && event.currentTarget && event.currentTarget && event.target) {
         var node = event.target;
         var parent_1 = node.parentElement;
@@ -91,13 +100,14 @@ function removeOption(event) {
             if (div) {
                 var content = div.textContent;
                 for (var i = 0; i < options.length; i++) {
-                    if (options[i] === content) {
+                    if (((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option) === content) {
                         options.splice(i, 1);
                         break;
                     }
                 }
                 for (var i = 0; i < optionsRand.length; i++) {
-                    if (optionsRand[i] === content) {
+                    var index = optionsRand[i];
+                    if (index && ((_b = options[index]) === null || _b === void 0 ? void 0 : _b.option) === content) {
                         optionsRand.splice(i, 1);
                         break;
                     }
@@ -113,12 +123,13 @@ function removeOption(event) {
 }
 ;
 function updateOptions() {
+    var _a;
     var optionsContainer = document.querySelector('.options-container');
     if (optionsContainer) {
         optionColorsIndex = 0;
         var optionsHTML = '';
         for (var i = 0; i < options.length; i++) {
-            optionsHTML += "<div class=\"list-option-style\" style=\"background-color:".concat(optionColors[optionColorsIndex], "\"><div>").concat(options[i], "</div><button class=\"remove-option-btn\">x</button></div>");
+            optionsHTML += "<div class=\"list-option-style\" style=\"background-color:".concat(optionColors[optionColorsIndex], "\"><div>").concat((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option, "</div><button class=\"remove-option-btn\">x</button></div>");
             optionColorsIndex += 1;
             if (optionColorsIndex === optionColors.length) {
                 optionColorsIndex = 0;
@@ -142,9 +153,10 @@ function addOption() {
     var optionsContainer = document.querySelector('.options-container');
     var selectionMethod = document.querySelector('#selection-method');
     if (optionField) {
-        var option = optionField.value;
+        var optionStr = optionField.value;
         optionField.value = '';
-        if (option && optionsContainer && selectionMethod) {
+        if (optionStr && optionsContainer && selectionMethod) {
+            var option = { option: optionStr };
             options.push(option);
             updateOptions();
         }
