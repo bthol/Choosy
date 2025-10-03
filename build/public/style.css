@@ -35,29 +35,34 @@ body {
 }
 
 header {
-  position: relative;
   z-index: 2;
+  position: relative;
   margin: 0px;
-  padding: 8px;
-  background-color: var(--background-color-2);
+  padding-bottom: 8px;
   grid-column: 1/span 3;
   display: grid;
-  border-bottom: 2px solid var(--border-color);
+  background-color: hsl(3, 99%, 52%);
+  border-bottom: 7px solid var(--border-color);
+}
+header > div {
+  display: grid;
+  background-color: var(--background-color-2);
+  border-bottom: 2px solid hsl(240, 2%, 40%);
 }
 
 #website-title {
   justify-self: center;
   align-self: center;
   padding: 0rem 1rem;
-  margin: 3px;
+  margin: 5px;
   font-size: 3.1rem;
   font-weight: 600;
   letter-spacing: 0.1rem;
   font-family: "Brush Script MT", cursive;
   color: hsl(3, 99%, 52%);
   background-color: hsl(49, 40%, 96%);
-  border: 0.1rem solid hsl(240, 2%, 40%);
-  border-radius: 5rem;
+  border: 0.12rem solid hsl(240, 2%, 40%);
+  border-radius: 15rem 6rem 10rem 6rem;
 }
 
 nav {
