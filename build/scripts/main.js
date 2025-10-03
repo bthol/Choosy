@@ -30,7 +30,7 @@ function updateOptions() {
         optionColorsIndex = 0;
         var optionsHTML = '';
         for (var i = 0; i < options.length; i++) {
-            optionsHTML += "<div class=\"list-option-style\" style=\"background-color:".concat(optionColors[optionColorsIndex], "\"><div>").concat((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option, "</div><button type=\"button\" class=\"option-backward-btn\"><</button><button type=\"button\" class=\"option-forward-btn\">></button><button type=\"button\" class=\"remove-option-btn\">x</button></div>");
+            optionsHTML += "<div class=\"list-option-style\" style=\"background-color:".concat(optionColors[optionColorsIndex], "\"><button type=\"button\" class=\"remove-option-btn\">x</button><div class=\"option-text-element\">").concat((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option, "</div><button type=\"button\" class=\"option-backward-btn\"><</button><button type=\"button\" class=\"option-forward-btn\">></button></div>");
             optionColorsIndex += 1;
             if (optionColorsIndex === optionColors.length) {
                 optionColorsIndex = 0;
@@ -106,7 +106,7 @@ function selectOption() {
                     var index = optionsRand[optionsIndex];
                     if (index !== undefined) {
                         var choice_1 = (_a = options[index]) === null || _a === void 0 ? void 0 : _a.option;
-                        selectedDisplay_1.innerHTML = "".concat(choice_1);
+                        selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat(choice_1, "</div>");
                         options.forEach(function (option, index) {
                             if (option.option === choice_1) {
                                 selectedDisplay_1.setAttribute('style', "background-color: ".concat(optionColors[index % optionColors.length]));
@@ -124,7 +124,7 @@ function selectOption() {
             }
             else if (methodStr === 'random-option') {
                 var i = Math.floor(Math.random() * options.length);
-                selectedDisplay_1.innerHTML = "".concat((_b = options[i]) === null || _b === void 0 ? void 0 : _b.option);
+                selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat((_b = options[i]) === null || _b === void 0 ? void 0 : _b.option, "</div>");
                 selectedDisplay_1.setAttribute('style', "background-color: ".concat(optionColors[i % optionColors.length]));
             }
         }
@@ -137,7 +137,7 @@ function removeOption(event) {
         var node = event.target;
         var parent_1 = node.parentElement;
         if (parent_1) {
-            var div = parent_1.querySelector('div');
+            var div = parent_1.querySelector('.option-text-element');
             if (div) {
                 var content = div.textContent;
                 for (var i = 0; i < options.length; i++) {
@@ -194,16 +194,19 @@ function optionBackward(event) {
         var node = event.target;
         var parent_2 = node.parentElement;
         if (parent_2) {
-            var div = parent_2.querySelector('div');
+            var div = parent_2.querySelector('.option-text-element');
             if (div) {
                 var content = div.textContent;
                 for (var i = 0; i < options.length; i++) {
                     if (((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option) === content && i - 1 > -1) {
                         options = reorderOptions(i, i - 1, options.length);
+                        if (selectionMethod && selectionMethod.value === 'random-order') {
+                            optionsRandomizeOrder();
+                        }
+                        updateOptions();
                         break;
                     }
                 }
-                updateOptions();
             }
         }
     }
@@ -215,16 +218,19 @@ function optionForward(event) {
         var node = event.target;
         var parent_3 = node.parentElement;
         if (parent_3) {
-            var div = parent_3.querySelector('div');
+            var div = parent_3.querySelector('.option-text-element');
             if (div) {
                 var content = div.textContent;
                 for (var i = 0; i < options.length; i++) {
                     if (((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option) === content && i + 1 < options.length) {
                         options = reorderOptions(i, i + 1, options.length);
+                        if (selectionMethod && selectionMethod.value === 'random-order') {
+                            optionsRandomizeOrder();
+                        }
+                        updateOptions();
                         break;
                     }
                 }
-                updateOptions();
             }
         }
     }
@@ -414,7 +420,12 @@ var optionField = document.querySelector('#option-field');
 // add listeners
 if (selectionOptionBtn && addOptionBtn && clearOPtionsBtn) {
     selectionOptionBtn.addEventListener('click', selectOption);
-    addOptionBtn.addEventListener('click', addOption);
+    addOptionBtn.addEventListener('click', function () {
+        if (optionField) {
+            optionField.focus();
+        }
+        addOption();
+    });
     clearOPtionsBtn.addEventListener('click', clearOptions);
 }
 else {

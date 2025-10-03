@@ -27,7 +27,7 @@ function updateOptions(): void {
         optionColorsIndex = 0;
         let optionsHTML = '';
         for (let i = 0; i < options.length; i++) {
-            optionsHTML += `<div class="list-option-style" style="background-color:${optionColors[optionColorsIndex]}"><div>${options[i]?.option}</div><button type="button" class="option-backward-btn"><</button><button type="button" class="option-forward-btn">></button><button type="button" class="remove-option-btn">x</button></div>`;
+            optionsHTML += `<div class="list-option-style" style="background-color:${optionColors[optionColorsIndex]}"><button type="button" class="remove-option-btn">x</button><div class="option-text-element">${options[i]?.option}</div><button type="button" class="option-backward-btn"><</button><button type="button" class="option-forward-btn">></button></div>`;
             optionColorsIndex += 1;
             if (optionColorsIndex === optionColors.length) {
                 optionColorsIndex = 0;
@@ -97,7 +97,7 @@ function selectOption(): void {
                     const index: number | undefined = optionsRand[optionsIndex];
                     if (index !== undefined) {
                         const choice: string | undefined = options[index]?.option;
-                        selectedDisplay.innerHTML = `${choice}`;
+                        selectedDisplay.innerHTML = `<div class="option-text-element">${choice}</div>`;
                         options.forEach((option, index) => {
                             if (option.option === choice) {
                                 selectedDisplay.setAttribute('style', `background-color: ${optionColors[index % optionColors.length]}`);
@@ -113,7 +113,7 @@ function selectOption(): void {
                 }
             } else if (methodStr === 'random-option') {
                 const i: number = Math.floor(Math.random() * options.length);
-                selectedDisplay.innerHTML = `${options[i]?.option}`;
+                selectedDisplay.innerHTML = `<div class="option-text-element">${options[i]?.option}</div>`;
                 selectedDisplay.setAttribute('style', `background-color: ${optionColors[i % optionColors.length]}`);
             }
         }
@@ -124,7 +124,7 @@ function removeOption(event: Event): void {
         const node: Node = event.target as Node;
         const parent: HTMLElement | null = node.parentElement;
         if (parent) {
-            const div: HTMLElement | null = parent.querySelector('div');
+            const div: HTMLElement | null = parent.querySelector('.option-text-element');
             if (div) {
                 const content: string = div.textContent;
                 for (let i = 0; i < options.length; i++) {
@@ -176,16 +176,19 @@ function optionBackward(event: Event): void {
         const node: Node = event.target as Node;
         const parent: HTMLElement | null = node.parentElement;
         if (parent) {
-            const div: HTMLElement | null = parent.querySelector('div');
+            const div: HTMLElement | null = parent.querySelector('.option-text-element');
             if (div) {
                 const content: string = div.textContent;
                 for (let i = 0; i < options.length; i++) {
                     if (options[i]?.option === content && i - 1 > -1) {
                         options = reorderOptions(i, i - 1, options.length);
+                        if (selectionMethod && selectionMethod.value === 'random-order') {
+                            optionsRandomizeOrder();
+                        }
+                        updateOptions();
                         break;
                     }
                 }
-                updateOptions();
             }
         }
     }
@@ -195,16 +198,20 @@ function optionForward(event: Event): void {
         const node: Node = event.target as Node;
         const parent: HTMLElement | null = node.parentElement;
         if (parent) {
-            const div: HTMLElement | null = parent.querySelector('div');
+            const div: HTMLElement | null = parent.querySelector('.option-text-element');
             if (div) {
                 const content: string = div.textContent;
                 for (let i = 0; i < options.length; i++) {
                     if (options[i]?.option === content && i + 1 < options.length) {
                         options = reorderOptions(i, i + 1, options.length);
+                        if (selectionMethod && selectionMethod.value === 'random-order') {
+                            optionsRandomizeOrder();
+                        }
+                        updateOptions();
                         break;
                     }
                 }
-                updateOptions();
+
             }
         }
     }
@@ -384,7 +391,12 @@ const optionField: HTMLInputElement | null = document.querySelector('#option-fie
 // add listeners
 if (selectionOptionBtn && addOptionBtn && clearOPtionsBtn) {
     selectionOptionBtn.addEventListener('click', selectOption);
-    addOptionBtn.addEventListener('click', addOption);
+    addOptionBtn.addEventListener('click', () => {
+        if (optionField) {
+            optionField.focus();
+        }
+        addOption();
+    });
     clearOPtionsBtn.addEventListener('click', clearOptions);
 } else {
     console.error('ERROR: Button(s) not found');

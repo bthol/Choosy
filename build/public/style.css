@@ -112,16 +112,35 @@ footer > small {
   align-self: center;
 }
 
+.options-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.list-option-style {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 2fr 1fr;
+  border-radius: 5px;
+  padding: 8px;
+}
+
+.option-text-element {
+  white-space: nowrap;
+  overflow-x: scroll;
+  padding: 14px 0px;
+  grid-column: 1/span 8;
+  grid-row: 2;
+}
+
 .remove-option-btn {
   margin-left: 10px;
   padding: 0px 5px 2px 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  grid-column-start: 8;
 }
 
 .selected-option-display-container {
-  display: flex;
   gap: 10px;
   font-size: x-large;
   margin: 16px 0px;
@@ -133,24 +152,26 @@ footer > small {
 #selected-option-display {
   grid-column: 2;
 }
-
-.options-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
-}
-
-.list-option-style {
-  display: grid;
-  grid-template-columns: 10fr 1fr 1fr 1fr;
-  border-radius: 5px;
-  padding: 8px;
+#selected-option-display > .option-text-element {
+  grid-row: 1/span 3;
 }
 
 @media (max-width: 800px) {
   main {
     width: auto;
     grid-column: 1/span 3;
+  }
+}
+@media (max-width: 324px) {
+  .selected-option-display-container {
+    grid-template-columns: 1fr;
+    margin: 0px;
+  }
+  #selected-option-display {
+    grid-column: 1;
+  }
+  .options-container {
+    grid-template-columns: 1fr;
   }
 }
 @media only screen and (hover: hover) {
