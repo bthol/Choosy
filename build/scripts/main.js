@@ -5,6 +5,62 @@ var optionColorsIndex = 0;
 var optionsIndex = 0;
 var options = [];
 var optionsRand = [];
+function clearOptions() {
+    var optionsContainer = document.querySelector('.options-container');
+    var selectedDisplay = document.querySelector('#selected-option-display');
+    var optionField = document.querySelector('#option-field');
+    options = [];
+    optionsIndex = 0;
+    if (optionsContainer) {
+        optionsContainer.innerHTML = '';
+    }
+    if (selectedDisplay) {
+        selectedDisplay.innerHTML = '';
+        selectedDisplay.setAttribute('style', 'background: none');
+    }
+    if (optionField) {
+        optionField.value = '';
+    }
+}
+;
+function updateOptions() {
+    var _a;
+    var optionsContainer = document.querySelector('.options-container');
+    if (optionsContainer) {
+        optionColorsIndex = 0;
+        var optionsHTML = '';
+        for (var i = 0; i < options.length; i++) {
+            optionsHTML += "<div class=\"list-option-style\" style=\"background-color:".concat(optionColors[optionColorsIndex], "\"><div>").concat((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option, "</div><button type=\"button\" class=\"option-backward-btn\"><</button><button type=\"button\" class=\"option-forward-btn\">></button><button type=\"button\" class=\"remove-option-btn\">x</button></div>");
+            optionColorsIndex += 1;
+            if (optionColorsIndex === optionColors.length) {
+                optionColorsIndex = 0;
+            }
+        }
+        document.querySelectorAll('.remove-option-btn').forEach(function (btn) {
+            btn.removeEventListener('click', removeOption);
+        });
+        document.querySelectorAll('.option-backward-btn').forEach(function (btn) {
+            btn.removeEventListener('click', optionBackward);
+        });
+        document.querySelectorAll('.option-forward-btn').forEach(function (btn) {
+            btn.removeEventListener('click', optionForward);
+        });
+        optionsContainer.innerHTML = "".concat(optionsHTML);
+        document.querySelectorAll('.remove-option-btn').forEach(function (btn) {
+            btn.addEventListener('click', removeOption, { once: true });
+        });
+        document.querySelectorAll('.option-backward-btn').forEach(function (btn) {
+            btn.addEventListener('click', optionBackward);
+        });
+        document.querySelectorAll('.option-forward-btn').forEach(function (btn) {
+            btn.addEventListener('click', optionForward);
+        });
+    }
+    else {
+        console.error('ERROR: options not updated');
+    }
+}
+;
 function optionsRandomizeOrder() {
     var max = 1000;
     if (options.length < max) {
@@ -37,56 +93,41 @@ function optionsRandomizeOrder() {
 ;
 function selectOption() {
     var _a, _b;
-    var selectedDisplay = document.querySelector('#selected-option-display');
-    var selectionMethod = document.querySelector('#selection-method');
-    if (selectionMethod && selectedDisplay) {
-        var methodStr = selectionMethod.value;
-        if (methodStr === 'random-order') {
-            if (optionsRand) {
-                if (optionsIndex === 0) {
-                    optionsRandomizeOrder();
-                }
-                var index = optionsRand[optionsIndex];
-                if (index !== undefined) {
-                    var choice_1 = (_a = options[index]) === null || _a === void 0 ? void 0 : _a.option;
-                    selectedDisplay.innerHTML = "".concat(choice_1);
-                    options.forEach(function (option, index) {
-                        if (option.option === choice_1) {
-                            selectedDisplay.setAttribute('style', "background-color: ".concat(optionColors[index % optionColors.length]));
+    if (options.length > 0) {
+        var selectedDisplay_1 = document.querySelector('#selected-option-display');
+        var selectionMethod_1 = document.querySelector('#selection-method');
+        if (selectionMethod_1 && selectedDisplay_1) {
+            var methodStr = selectionMethod_1.value;
+            if (methodStr === 'random-order') {
+                if (optionsRand) {
+                    if (optionsIndex === 0) {
+                        optionsRandomizeOrder();
+                    }
+                    var index = optionsRand[optionsIndex];
+                    if (index !== undefined) {
+                        var choice_1 = (_a = options[index]) === null || _a === void 0 ? void 0 : _a.option;
+                        selectedDisplay_1.innerHTML = "".concat(choice_1);
+                        options.forEach(function (option, index) {
+                            if (option.option === choice_1) {
+                                selectedDisplay_1.setAttribute('style', "background-color: ".concat(optionColors[index % optionColors.length]));
+                            }
+                        });
+                        optionsIndex += 1;
+                        if (optionsIndex === optionsRand.length) {
+                            optionsIndex = 0;
                         }
-                    });
-                    optionsIndex += 1;
-                    if (optionsIndex === optionsRand.length) {
-                        optionsIndex = 0;
+                    }
+                    else {
+                        console.error('ERROR: data not found at index during selection');
                     }
                 }
-                else {
-                    console.error('ERROR: data not found at index during selection');
-                }
+            }
+            else if (methodStr === 'random-option') {
+                var i = Math.floor(Math.random() * options.length);
+                selectedDisplay_1.innerHTML = "".concat((_b = options[i]) === null || _b === void 0 ? void 0 : _b.option);
+                selectedDisplay_1.setAttribute('style', "background-color: ".concat(optionColors[i % optionColors.length]));
             }
         }
-        else if (methodStr === 'random-option') {
-            var i = Math.floor(Math.random() * options.length);
-            selectedDisplay.innerHTML = "".concat((_b = options[i]) === null || _b === void 0 ? void 0 : _b.option);
-            selectedDisplay.setAttribute('style', "background-color: ".concat(optionColors[i % optionColors.length]));
-        }
-    }
-}
-;
-function clearOptions() {
-    var optionsContainer = document.querySelector('.options-container');
-    var selectedDisplay = document.querySelector('#selected-option-display');
-    var optionField = document.querySelector('#option-field');
-    options = [];
-    if (optionsContainer) {
-        optionsContainer.innerHTML = '';
-    }
-    if (selectedDisplay) {
-        selectedDisplay.innerHTML = '';
-        selectedDisplay.setAttribute('style', 'background: none');
-    }
-    if (optionField) {
-        optionField.value = '';
     }
 }
 ;
@@ -122,29 +163,70 @@ function removeOption(event) {
     }
 }
 ;
-function updateOptions() {
+function reorderOptions(i1, i2, len) {
+    var arr = [];
+    for (var i = 0; i < len; i++) {
+        arr.push(i);
+    }
+    if (i1 !== i2 && i1 < len && i2 < len) {
+        if (i1 < i2) {
+            arr.splice(i2 + 1, 0, i1);
+            arr.splice(i1, 1);
+        }
+        else {
+            arr.splice(i2, 0, i1);
+            arr.splice(i1 + 1, 1);
+        }
+    }
+    var optionsReorder = [];
+    for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
+        var i = arr_1[_i];
+        if (options[i]) {
+            optionsReorder.push(options[i]);
+        }
+    }
+    return optionsReorder;
+}
+;
+function optionBackward(event) {
     var _a;
-    var optionsContainer = document.querySelector('.options-container');
-    if (optionsContainer) {
-        optionColorsIndex = 0;
-        var optionsHTML = '';
-        for (var i = 0; i < options.length; i++) {
-            optionsHTML += "<div class=\"list-option-style\" style=\"background-color:".concat(optionColors[optionColorsIndex], "\"><div>").concat((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option, "</div><button class=\"remove-option-btn\">x</button></div>");
-            optionColorsIndex += 1;
-            if (optionColorsIndex === optionColors.length) {
-                optionColorsIndex = 0;
+    if (event.target) {
+        var node = event.target;
+        var parent_2 = node.parentElement;
+        if (parent_2) {
+            var div = parent_2.querySelector('div');
+            if (div) {
+                var content = div.textContent;
+                for (var i = 0; i < options.length; i++) {
+                    if (((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option) === content && i - 1 > -1) {
+                        options = reorderOptions(i, i - 1, options.length);
+                        break;
+                    }
+                }
+                updateOptions();
             }
         }
-        document.querySelectorAll('.remove-option-btn').forEach(function (btn) {
-            btn.removeEventListener('click', removeOption);
-        });
-        optionsContainer.innerHTML = "".concat(optionsHTML);
-        document.querySelectorAll('.remove-option-btn').forEach(function (btn) {
-            btn.addEventListener('click', removeOption, { once: true });
-        });
     }
-    else {
-        console.error('ERROR: options not updated');
+}
+;
+function optionForward(event) {
+    var _a;
+    if (event.target) {
+        var node = event.target;
+        var parent_3 = node.parentElement;
+        if (parent_3) {
+            var div = parent_3.querySelector('div');
+            if (div) {
+                var content = div.textContent;
+                for (var i = 0; i < options.length; i++) {
+                    if (((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option) === content && i + 1 < options.length) {
+                        options = reorderOptions(i, i + 1, options.length);
+                        break;
+                    }
+                }
+                updateOptions();
+            }
+        }
     }
 }
 ;
@@ -200,7 +282,7 @@ function goPage(pageNumber) {
             var selectionOptionBtn_1 = document.querySelector('#select-option-btn');
             var addOptionBtn_1 = document.querySelector('#add-option-btn');
             var clearOPtionsBtn_1 = document.querySelector('#clear-options-btn');
-            var selectionMethod_1 = document.querySelector('#selection-method');
+            var selectionMethod_2 = document.querySelector('#selection-method');
             var optionField_1 = document.querySelector('#option-field');
             // add listeners
             if (selectionOptionBtn_1 && addOptionBtn_1 && clearOPtionsBtn_1) {
@@ -211,9 +293,9 @@ function goPage(pageNumber) {
             else {
                 console.error('ERROR: Button(s) not found');
             }
-            if (selectionMethod_1) {
-                selectionMethod_1.addEventListener('change', function () {
-                    if (selectionMethod_1.value === 'random-order') {
+            if (selectionMethod_2) {
+                selectionMethod_2.addEventListener('change', function () {
+                    if (selectionMethod_2.value === 'random-order') {
                         optionsRandomizeOrder();
                     }
                 });

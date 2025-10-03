@@ -4,6 +4,58 @@ let optionColorsIndex: number = 0;
 let optionsIndex: number = 0;
 let options: {option: string}[] = [];
 let optionsRand: number[] = [];
+function clearOptions(): void {
+    const optionsContainer: HTMLElement | null = document.querySelector('.options-container');
+    const selectedDisplay: HTMLElement | null = document.querySelector('#selected-option-display');
+    const optionField: HTMLInputElement  | null = document.querySelector('#option-field');
+    options = [];
+    optionsIndex = 0;
+    if (optionsContainer) {
+        optionsContainer.innerHTML = '';
+    }
+    if (selectedDisplay) {
+        selectedDisplay.innerHTML = '';
+        selectedDisplay.setAttribute('style', 'background: none');
+    }
+    if (optionField) {
+        optionField.value = '';
+    }
+};
+function updateOptions(): void {
+    const optionsContainer: HTMLElement | null = document.querySelector('.options-container');
+    if (optionsContainer) {
+        optionColorsIndex = 0;
+        let optionsHTML = '';
+        for (let i = 0; i < options.length; i++) {
+            optionsHTML += `<div class="list-option-style" style="background-color:${optionColors[optionColorsIndex]}"><div>${options[i]?.option}</div><button type="button" class="option-backward-btn"><</button><button type="button" class="option-forward-btn">></button><button type="button" class="remove-option-btn">x</button></div>`;
+            optionColorsIndex += 1;
+            if (optionColorsIndex === optionColors.length) {
+                optionColorsIndex = 0;
+            }
+        }
+        document.querySelectorAll('.remove-option-btn').forEach((btn) => {
+            btn.removeEventListener('click', removeOption);
+        });
+        document.querySelectorAll('.option-backward-btn').forEach((btn) => {
+            btn.removeEventListener('click', optionBackward);
+        });
+        document.querySelectorAll('.option-forward-btn').forEach((btn) => {
+            btn.removeEventListener('click', optionForward);
+        });
+        optionsContainer.innerHTML = `${optionsHTML}`;
+        document.querySelectorAll('.remove-option-btn').forEach((btn) => {
+            btn.addEventListener('click', removeOption, {once: true});
+        });
+        document.querySelectorAll('.option-backward-btn').forEach((btn) => {
+            btn.addEventListener('click', optionBackward);
+        });
+        document.querySelectorAll('.option-forward-btn').forEach((btn) => {
+            btn.addEventListener('click', optionForward);
+        });
+    } else {
+        console.error('ERROR: options not updated');
+    }
+};
 function optionsRandomizeOrder(): void {
     const max: number = 1000;
     if (options.length < max) {
@@ -32,53 +84,39 @@ function optionsRandomizeOrder(): void {
     }
 };
 function selectOption(): void {
-    const selectedDisplay: HTMLElement | null = document.querySelector('#selected-option-display');
-    const selectionMethod: HTMLSelectElement  | null = document.querySelector('#selection-method');
-    if (selectionMethod && selectedDisplay) {
-        const methodStr: string = selectionMethod.value;
-        if (methodStr === 'random-order') {
-            if (optionsRand) {
-                if (optionsIndex === 0) {
-                    optionsRandomizeOrder();
-                }
-                const index: number | undefined = optionsRand[optionsIndex];
-                if (index !== undefined) {
-                    const choice: string | undefined = options[index]?.option;
-                    selectedDisplay.innerHTML = `${choice}`;
-                    options.forEach((option, index) => {
-                        if (option.option === choice) {
-                            selectedDisplay.setAttribute('style', `background-color: ${optionColors[index % optionColors.length]}`);
-                        }
-                    });
-                    optionsIndex += 1;
-                    if (optionsIndex === optionsRand.length) {
-                        optionsIndex = 0;
+    if (options.length > 0) {
+        const selectedDisplay: HTMLElement | null = document.querySelector('#selected-option-display');
+        const selectionMethod: HTMLSelectElement  | null = document.querySelector('#selection-method');
+        if (selectionMethod && selectedDisplay) {
+            const methodStr: string = selectionMethod.value;
+            if (methodStr === 'random-order') {
+                if (optionsRand) {
+                    if (optionsIndex === 0) {
+                        optionsRandomizeOrder();
                     }
-                } else {
-                    console.error('ERROR: data not found at index during selection');
+                    const index: number | undefined = optionsRand[optionsIndex];
+                    if (index !== undefined) {
+                        const choice: string | undefined = options[index]?.option;
+                        selectedDisplay.innerHTML = `${choice}`;
+                        options.forEach((option, index) => {
+                            if (option.option === choice) {
+                                selectedDisplay.setAttribute('style', `background-color: ${optionColors[index % optionColors.length]}`);
+                            }
+                        });
+                        optionsIndex += 1;
+                        if (optionsIndex === optionsRand.length) {
+                            optionsIndex = 0;
+                        }
+                    } else {
+                        console.error('ERROR: data not found at index during selection');
+                    }
                 }
+            } else if (methodStr === 'random-option') {
+                const i: number = Math.floor(Math.random() * options.length);
+                selectedDisplay.innerHTML = `${options[i]?.option}`;
+                selectedDisplay.setAttribute('style', `background-color: ${optionColors[i % optionColors.length]}`);
             }
-        } else if (methodStr === 'random-option') {
-            const i: number = Math.floor(Math.random() * options.length);
-            selectedDisplay.innerHTML = `${options[i]?.option}`;
-            selectedDisplay.setAttribute('style', `background-color: ${optionColors[i % optionColors.length]}`);
         }
-    }
-};
-function clearOptions(): void {
-    const optionsContainer: HTMLElement | null = document.querySelector('.options-container');
-    const selectedDisplay: HTMLElement | null = document.querySelector('#selected-option-display');
-    const optionField: HTMLInputElement  | null = document.querySelector('#option-field');
-    options = [];
-    if (optionsContainer) {
-        optionsContainer.innerHTML = '';
-    }
-    if (selectedDisplay) {
-        selectedDisplay.innerHTML = '';
-        selectedDisplay.setAttribute('style', 'background: none');
-    }
-    if (optionField) {
-        optionField.value = '';
     }
 };
 function removeOption(event: Event): void {
@@ -111,27 +149,64 @@ function removeOption(event: Event): void {
         }
     }
 };
-function updateOptions(): void {
-    const optionsContainer: HTMLElement | null = document.querySelector('.options-container');
-    if (optionsContainer) {
-        optionColorsIndex = 0;
-        let optionsHTML = '';
-        for (let i = 0; i < options.length; i++) {
-            optionsHTML += `<div class="list-option-style" style="background-color:${optionColors[optionColorsIndex]}"><div>${options[i]?.option}</div><button class="remove-option-btn">x</button></div>`;
-            optionColorsIndex += 1;
-            if (optionColorsIndex === optionColors.length) {
-                optionColorsIndex = 0;
+function reorderOptions(i1: number, i2: number, len: number): {option: string}[] {
+    let arr: number[] = [];
+    for (let i = 0; i < len; i++) {
+        arr.push(i);
+    }
+    if (i1 !== i2 && i1 < len && i2 < len) {
+        if (i1 < i2) {
+            arr.splice(i2 + 1, 0, i1);
+            arr.splice(i1, 1);
+        } else {
+            arr.splice(i2 , 0, i1);
+            arr.splice(i1 + 1, 1);
+        }
+    }
+    let optionsReorder: {option: string}[] = [];
+    for (const i of arr) {
+        if (options[i]) {
+            optionsReorder.push(options[i]);
+        }
+    }
+    return optionsReorder;
+};
+function optionBackward(event: Event): void {
+    if (event.target) {
+        const node: Node = event.target as Node;
+        const parent: HTMLElement | null = node.parentElement;
+        if (parent) {
+            const div: HTMLElement | null = parent.querySelector('div');
+            if (div) {
+                const content: string = div.textContent;
+                for (let i = 0; i < options.length; i++) {
+                    if (options[i]?.option === content && i - 1 > -1) {
+                        options = reorderOptions(i, i - 1, options.length);
+                        break;
+                    }
+                }
+                updateOptions();
             }
         }
-        document.querySelectorAll('.remove-option-btn').forEach((btn) => {
-            btn.removeEventListener('click', removeOption);
-        });
-        optionsContainer.innerHTML = `${optionsHTML}`;
-        document.querySelectorAll('.remove-option-btn').forEach((btn) => {
-            btn.addEventListener('click', removeOption, {once: true});
-        });
-    } else {
-        console.error('ERROR: options not updated');
+    }
+};
+function optionForward(event: Event): void {
+    if (event.target) {
+        const node: Node = event.target as Node;
+        const parent: HTMLElement | null = node.parentElement;
+        if (parent) {
+            const div: HTMLElement | null = parent.querySelector('div');
+            if (div) {
+                const content: string = div.textContent;
+                for (let i = 0; i < options.length; i++) {
+                    if (options[i]?.option === content && i + 1 < options.length) {
+                        options = reorderOptions(i, i + 1, options.length);
+                        break;
+                    }
+                }
+                updateOptions();
+            }
+        }
     }
 };
 function addOption(): void {
