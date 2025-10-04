@@ -15,8 +15,8 @@ function clearOptions() {
         optionsContainer.innerHTML = '';
     }
     if (selectedDisplay) {
+        selectedDisplay.classList.remove('list-option-style');
         selectedDisplay.innerHTML = '';
-        selectedDisplay.setAttribute('style', 'background: none');
     }
     if (optionField) {
         optionField.value = '';
@@ -107,6 +107,7 @@ function selectOption() {
                     if (index !== undefined) {
                         var choice_1 = (_a = options[index]) === null || _a === void 0 ? void 0 : _a.option;
                         selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat(choice_1, "</div>");
+                        selectedDisplay_1.classList.add('list-option-style');
                         options.forEach(function (option, index) {
                             if (option.option === choice_1) {
                                 selectedDisplay_1.setAttribute('style', "background-color: ".concat(optionColors[index % optionColors.length]));
@@ -126,6 +127,7 @@ function selectOption() {
                 var i = Math.floor(Math.random() * options.length);
                 selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat((_b = options[i]) === null || _b === void 0 ? void 0 : _b.option, "</div>");
                 selectedDisplay_1.setAttribute('style', "background-color: ".concat(optionColors[i % optionColors.length]));
+                selectedDisplay_1.classList.add('list-option-style');
             }
         }
     }

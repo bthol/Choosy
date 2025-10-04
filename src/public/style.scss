@@ -113,6 +113,7 @@ footer {
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 	grid-template-rows: 1fr 2fr 1fr;
 	padding: 8px;
+	border: 2px solid var(--border-color);
 	@include index.break-corners;
 }
 

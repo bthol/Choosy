@@ -14,8 +14,8 @@ function clearOptions(): void {
         optionsContainer.innerHTML = '';
     }
     if (selectedDisplay) {
+        selectedDisplay.classList.remove('list-option-style');
         selectedDisplay.innerHTML = '';
-        selectedDisplay.setAttribute('style', 'background: none');
     }
     if (optionField) {
         optionField.value = '';
@@ -98,6 +98,7 @@ function selectOption(): void {
                     if (index !== undefined) {
                         const choice: string | undefined = options[index]?.option;
                         selectedDisplay.innerHTML = `<div class="option-text-element">${choice}</div>`;
+                        selectedDisplay.classList.add('list-option-style');
                         options.forEach((option, index) => {
                             if (option.option === choice) {
                                 selectedDisplay.setAttribute('style', `background-color: ${optionColors[index % optionColors.length]}`);
@@ -115,6 +116,7 @@ function selectOption(): void {
                 const i: number = Math.floor(Math.random() * options.length);
                 selectedDisplay.innerHTML = `<div class="option-text-element">${options[i]?.option}</div>`;
                 selectedDisplay.setAttribute('style', `background-color: ${optionColors[i % optionColors.length]}`);
+                selectedDisplay.classList.add('list-option-style');
             }
         }
     }
