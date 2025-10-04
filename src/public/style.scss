@@ -18,6 +18,7 @@ body {
 	font-family: index.$font-default;
 	font-style: normal;
 	font-weight: 400;
+	cursor: default;
 	@include index.background-gradient(index.$grad-2, index.$grad-1);
 }
 
@@ -67,21 +68,16 @@ nav {
 	}
 }
 
-.nav-button-style {
-	background: none;
-	border: none;
-}
-
-.section-separate-style {
-	border-bottom: 2px solid var(--border-color);
-}
-
 main {
 	padding: 0px 8px;
 	background-color: var(--background-color-3);
 	box-shadow: 0px 0px 3vw var(--shadow-color);
 	grid-column: 2 / 2;
 	width: 800px;
+}
+
+.section-separate-style {
+	border-bottom: 2px solid var(--border-color);
 }
 
 .section-margins {
@@ -125,8 +121,15 @@ footer {
 	grid-row: 2;
 }
 
+// BUTTONS
+.nav-button-style {
+	background: none;
+	border: none;
+	cursor: pointer;
+}
+
 .choose-control-btn-style {
-	@include index.button-generic(var(--border-color), index.$title-color-background);
+	@include index.button-generic(var(--border-color), var(--background-color-3));
 	@include index.button-roundness;
 	color: var(--text-color-1);
 }
@@ -134,19 +137,19 @@ footer {
 .remove-option-btn-style {
 	padding: 0px;
 	grid-column: 8;
-	@include index.button-generic(var(--border-color), index.$title-color-background);
+	@include index.button-generic(var(--border-color), var(--background-color-3));
 	@include index.button-roundness;
 }
 
 .option-backward-btn-style {
 	grid-column: 7;
-	@include index.button-generic(var(--border-color), index.$title-color-background);
+	@include index.button-generic(var(--border-color), var(--background-color-3));
 	@include index.button-roundness;
 }
 
 .option-forward-btn-style {
 	grid-column: 8;
-	@include index.button-generic(var(--border-color), index.$title-color-background);
+	@include index.button-generic(var(--border-color), var(--background-color-3));
 	@include index.button-roundness;
 }
 
@@ -190,15 +193,15 @@ footer {
 		color: rgb( from var(--text-color-1) 150 150 150 );
 	}
 	.choose-control-btn-style:hover {
-		@include index.button-generic-hover(index.$title-color, index.$title-color-background);
+		@include index.button-generic-hover(index.$detailing, var(--background-color-3));
 	}
 	.remove-option-btn-style:hover {
-		@include index.button-generic-hover(index.$title-color, index.$title-color-background);
+		@include index.button-generic-hover(index.$detailing, var(--background-color-3));
 	}
 	.option-forward-btn-style:hover {
-		@include index.button-generic-hover(index.$title-color, index.$title-color-background);
+		@include index.button-generic-hover(index.$detailing, var(--background-color-3));
 	}
 	.option-backward-btn-style:hover {
-		@include index.button-generic-hover(index.$title-color, index.$title-color-background);
+		@include index.button-generic-hover(index.$detailing, var(--background-color-3));
 	}
 }

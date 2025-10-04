@@ -1,7 +1,7 @@
 .default-theme {
   --background-color-1: hsl(49, 70%, 88%);
   --background-color-2: hsl(60, 88%, 67%);
-  --background-color-3: hsl(49, 40%, 96%);
+  --background-color-3: hsl(49, 40%, 94%);
   --border-color: hsl(240, 2%, 60%);
   --text-color-1: hsl(0, 97%, 20%);
   --text-color-2: hsl(0, 3%, 82%);
@@ -28,6 +28,7 @@ body {
   font-family: jumble, sans-serif;
   font-style: normal;
   font-weight: 400;
+  cursor: default;
   background: rgb(237, 221, 83);
   background: -webkit-linear-gradient(90deg, rgb(237, 221, 83) 0%, rgb(194, 147, 147) 20%, rgb(194, 147, 147) 80%, rgb(237, 221, 83) 100%);
   background: -moz-linear-gradient(90deg, rgb(237, 221, 83) 0%, rgb(194, 147, 147) 20%, rgb(194, 147, 147) 80%, rgb(194, 147, 147) 100%);
@@ -80,21 +81,16 @@ nav > .center-nav {
   justify-content: space-evenly;
 }
 
-.nav-button-style {
-  background: none;
-  border: none;
-}
-
-.section-separate-style {
-  border-bottom: 2px solid var(--border-color);
-}
-
 main {
   padding: 0px 8px;
   background-color: var(--background-color-3);
   box-shadow: 0px 0px 3vw var(--shadow-color);
   grid-column: 2/2;
   width: 800px;
+}
+
+.section-separate-style {
+  border-bottom: 2px solid var(--border-color);
 }
 
 .section-margins {
@@ -140,10 +136,17 @@ footer > small {
   grid-row: 2;
 }
 
+.nav-button-style {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
 .choose-control-btn-style {
   margin: 2px;
-  background-color: rgb(249, 247, 241);
+  background-color: hsl(from var(--background-color-3) 0 0% 115%);
   border: 2px solid var(--border-color);
+  cursor: pointer;
   border-radius: 5px;
   color: var(--text-color-1);
 }
@@ -152,24 +155,27 @@ footer > small {
   padding: 0px;
   grid-column: 8;
   margin: 2px;
-  background-color: rgb(249, 247, 241);
+  background-color: hsl(from var(--background-color-3) 0 0% 115%);
   border: 2px solid var(--border-color);
+  cursor: pointer;
   border-radius: 5px;
 }
 
 .option-backward-btn-style {
   grid-column: 7;
   margin: 2px;
-  background-color: rgb(249, 247, 241);
+  background-color: hsl(from var(--background-color-3) 0 0% 115%);
   border: 2px solid var(--border-color);
+  cursor: pointer;
   border-radius: 5px;
 }
 
 .option-forward-btn-style {
   grid-column: 8;
   margin: 2px;
-  background-color: rgb(249, 247, 241);
+  background-color: hsl(from var(--background-color-3) 0 0% 115%);
   border: 2px solid var(--border-color);
+  cursor: pointer;
   border-radius: 5px;
 }
 
@@ -212,19 +218,19 @@ footer > small {
     color: rgb(from var(--text-color-1) 150 150 150);
   }
   .choose-control-btn-style:hover {
-    background-color: hsl(from rgb(249, 247, 241) 0 0% 85%);
+    background-color: hsl(from var(--background-color-3) 0 0% 85%);
     border: 2px solid hsl(3, 99%, 52%);
   }
   .remove-option-btn-style:hover {
-    background-color: hsl(from rgb(249, 247, 241) 0 0% 85%);
+    background-color: hsl(from var(--background-color-3) 0 0% 85%);
     border: 2px solid hsl(3, 99%, 52%);
   }
   .option-forward-btn-style:hover {
-    background-color: hsl(from rgb(249, 247, 241) 0 0% 85%);
+    background-color: hsl(from var(--background-color-3) 0 0% 85%);
     border: 2px solid hsl(3, 99%, 52%);
   }
   .option-backward-btn-style:hover {
-    background-color: hsl(from rgb(249, 247, 241) 0 0% 85%);
+    background-color: hsl(from var(--background-color-3) 0 0% 85%);
     border: 2px solid hsl(3, 99%, 52%);
   }
 }

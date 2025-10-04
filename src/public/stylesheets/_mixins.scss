@@ -26,8 +26,9 @@
 
 @mixin button-generic($border-color, $background-color) {
 	margin: 2px;
-	background-color: $background-color;
+	background-color: hsl( from #{$background-color} 0 0% 115% );
 	border: 2px solid $border-color;
+	cursor: pointer;
 }
 
 @mixin button-generic-hover($border-color, $background-color) {
