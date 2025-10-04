@@ -2,13 +2,12 @@
 
 // website title
 $title-color: hsl(3, 99%, 52%);
-$title-color-background: hsl(49, 40%, 96%);
+$title-color-background: rgb(249, 247, 241);
 $title-color-border: hsl(240, 2%, 40%);
 
-// gradient
-$grad-1: rgba(194, 147, 147, 1);
-$grad-2: rgba(237, 221, 83, 1);
-$grad-3: rgba(249, 247, 241, 1);
+// gradient options
+$grad-1: rgb(194, 147, 147);
+$grad-2: rgb(237, 221, 83);
 
 // default theme
 $text-color-1_default: hsl(0, 97%, 20%);

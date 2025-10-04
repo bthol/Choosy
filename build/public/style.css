@@ -28,10 +28,10 @@ body {
   font-family: jumble, sans-serif;
   font-style: normal;
   font-weight: 400;
-  background: #c29393;
-  background: -webkit-linear-gradient(90deg, rgb(194, 147, 147) 0%, rgb(249, 247, 241) 20%, rgb(249, 247, 241) 80%, rgb(194, 147, 147) 100%);
-  background: -moz-linear-gradient(90deg, rgb(194, 147, 147) 0%, rgb(249, 247, 241) 20%, rgb(249, 247, 241) 80%, rgb(194, 147, 147) 100%);
-  background: linear-gradient(90deg, rgb(194, 147, 147) 0%, rgb(249, 247, 241) 20%, rgb(249, 247, 241) 80%, rgb(194, 147, 147) 100%);
+  background: rgb(237, 221, 83);
+  background: -webkit-linear-gradient(90deg, rgb(237, 221, 83) 0%, rgb(194, 147, 147) 20%, rgb(194, 147, 147) 80%, rgb(237, 221, 83) 100%);
+  background: -moz-linear-gradient(90deg, rgb(237, 221, 83) 0%, rgb(194, 147, 147) 20%, rgb(194, 147, 147) 80%, rgb(194, 147, 147) 100%);
+  background: linear-gradient(90deg, rgb(237, 221, 83) 0%, rgb(194, 147, 147) 20%, rgb(194, 147, 147) 80%, rgb(237, 221, 83) 100%);
 }
 
 header {
@@ -60,7 +60,7 @@ header > div {
   letter-spacing: 0.1rem;
   font-family: "Brush Script MT", cursive;
   color: hsl(3, 99%, 52%);
-  background-color: hsl(49, 40%, 96%);
+  background-color: rgb(249, 247, 241);
   border: 0.12rem solid hsl(240, 2%, 40%);
   border-radius: 15rem 6rem 10rem 6rem;
 }
@@ -127,8 +127,8 @@ footer > small {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 2fr 1fr;
-  border-radius: 5px;
   padding: 8px;
+  border-radius: 5px;
 }
 
 .option-text-element {
@@ -139,10 +139,33 @@ footer > small {
   grid-row: 2;
 }
 
-.remove-option-btn {
-  margin-left: 10px;
-  padding: 0px 5px 2px 5px;
-  grid-column-start: 8;
+.choose-control-btn-style {
+  background-color: rgb(249, 247, 241);
+  border: 2px solid var(--border-color);
+  border-radius: 5px;
+  color: var(--text-color-1);
+}
+
+.remove-option-btn-style {
+  padding: 0px;
+  grid-column: 8;
+  background-color: rgb(249, 247, 241);
+  border: 2px solid var(--border-color);
+  border-radius: 5px;
+}
+
+.option-backward-btn-style {
+  grid-column: 7;
+  background-color: rgb(249, 247, 241);
+  border: 2px solid var(--border-color);
+  border-radius: 5px;
+}
+
+.option-forward-btn-style {
+  grid-column: 8;
+  background-color: rgb(249, 247, 241);
+  border: 2px solid var(--border-color);
+  border-radius: 5px;
 }
 
 .selected-option-display-container {
@@ -182,6 +205,22 @@ footer > small {
 @media only screen and (hover: hover) {
   .nav-button-style:hover {
     color: rgb(from var(--text-color-1) 150 150 150);
+  }
+  .choose-control-btn-style:hover {
+    background-color: hsl(from rgb(249, 247, 241) 0 0% 85%);
+    border: 2px solid hsl(3, 99%, 52%);
+  }
+  .remove-option-btn-style:hover {
+    background-color: hsl(from rgb(249, 247, 241) 0 0% 85%);
+    border: 2px solid hsl(3, 99%, 52%);
+  }
+  .option-forward-btn-style:hover {
+    background-color: hsl(from rgb(249, 247, 241) 0 0% 85%);
+    border: 2px solid hsl(3, 99%, 52%);
+  }
+  .option-backward-btn-style:hover {
+    background-color: hsl(from rgb(249, 247, 241) 0 0% 85%);
+    border: 2px solid hsl(3, 99%, 52%);
   }
 }
 

@@ -30,7 +30,7 @@ function updateOptions() {
         optionColorsIndex = 0;
         var optionsHTML = '';
         for (var i = 0; i < options.length; i++) {
-            optionsHTML += "<div class=\"list-option-style\" style=\"background-color:".concat(optionColors[optionColorsIndex], "\"><button type=\"button\" class=\"remove-option-btn\">x</button><div class=\"option-text-element\">").concat((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option, "</div><button type=\"button\" class=\"option-backward-btn\"><</button><button type=\"button\" class=\"option-forward-btn\">></button></div>");
+            optionsHTML += "<div class=\"list-option-style\" style=\"background-color:".concat(optionColors[optionColorsIndex], "\"><button type=\"button\" class=\"remove-option-btn remove-option-btn-style\"><i class=\"fa-solid fa-x fa-sm remove-option-btn\"></i></button><div class=\"option-text-element\">").concat((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option, "</div><button type=\"button\" class=\"option-backward-btn option-backward-btn-style\"><i class=\"fa fa-arrow-left option-backward-btn\"></i></button><button type=\"button\" class=\"option-forward-btn option-forward-btn-style\"><i class=\"fa fa-arrow-right option-forward-btn\"></i></button></div>");
             optionColorsIndex += 1;
             if (optionColorsIndex === optionColors.length) {
                 optionColorsIndex = 0;
@@ -132,23 +132,26 @@ function selectOption() {
 }
 ;
 function removeOption(event) {
-    var _a, _b;
+    var _a, _b, _c;
     if (options && event.currentTarget && event.currentTarget && event.target) {
         var node = event.target;
-        var parent_1 = node.parentElement;
-        if (parent_1) {
-            var div = parent_1.querySelector('.option-text-element');
+        var root = node.parentElement;
+        if (node.parentElement && node.parentElement.nodeName === 'BUTTON') {
+            root = (_a = node.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement;
+        }
+        if (root) {
+            var div = root.querySelector('.option-text-element');
             if (div) {
                 var content = div.textContent;
                 for (var i = 0; i < options.length; i++) {
-                    if (((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option) === content) {
+                    if (((_b = options[i]) === null || _b === void 0 ? void 0 : _b.option) === content) {
                         options.splice(i, 1);
                         break;
                     }
                 }
                 for (var i = 0; i < optionsRand.length; i++) {
                     var index = optionsRand[i];
-                    if (index && ((_b = options[index]) === null || _b === void 0 ? void 0 : _b.option) === content) {
+                    if (index && ((_c = options[index]) === null || _c === void 0 ? void 0 : _c.option) === content) {
                         optionsRand.splice(i, 1);
                         break;
                     }
@@ -156,7 +159,7 @@ function removeOption(event) {
                 if (optionsIndex > optionsRand.length - 1) {
                     optionsIndex = 0;
                 }
-                parent_1.remove();
+                root.remove();
                 updateOptions();
             }
         }
@@ -189,16 +192,19 @@ function reorderOptions(i1, i2, len) {
 }
 ;
 function optionBackward(event) {
-    var _a;
+    var _a, _b;
     if (event.target) {
         var node = event.target;
-        var parent_2 = node.parentElement;
-        if (parent_2) {
-            var div = parent_2.querySelector('.option-text-element');
-            if (div) {
-                var content = div.textContent;
+        var root = node.parentElement;
+        if (node.parentElement && node.parentElement.nodeName === 'BUTTON') {
+            root = (_a = node.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement;
+        }
+        if (root) {
+            var text = root.querySelector('.option-text-element');
+            if (text) {
+                var content = text.textContent;
                 for (var i = 0; i < options.length; i++) {
-                    if (((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option) === content && i - 1 > -1) {
+                    if (((_b = options[i]) === null || _b === void 0 ? void 0 : _b.option) === content && i - 1 > -1) {
                         options = reorderOptions(i, i - 1, options.length);
                         if (selectionMethod && selectionMethod.value === 'random-order') {
                             optionsRandomizeOrder();
@@ -213,16 +219,19 @@ function optionBackward(event) {
 }
 ;
 function optionForward(event) {
-    var _a;
+    var _a, _b;
     if (event.target) {
         var node = event.target;
-        var parent_3 = node.parentElement;
-        if (parent_3) {
-            var div = parent_3.querySelector('.option-text-element');
-            if (div) {
-                var content = div.textContent;
+        var root = node.parentElement;
+        if (node.parentElement && node.parentElement.nodeName === 'BUTTON') {
+            root = (_a = node.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement;
+        }
+        if (root) {
+            var text = root.querySelector('.option-text-element');
+            if (text) {
+                var content = text.textContent;
                 for (var i = 0; i < options.length; i++) {
-                    if (((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option) === content && i + 1 < options.length) {
+                    if (((_b = options[i]) === null || _b === void 0 ? void 0 : _b.option) === content && i + 1 < options.length) {
                         options = reorderOptions(i, i + 1, options.length);
                         if (selectionMethod && selectionMethod.value === 'random-order') {
                             optionsRandomizeOrder();

@@ -18,7 +18,7 @@ body {
 	font-family: index.$font-default;
 	font-style: normal;
 	font-weight: 400;
-	@include index.background-gradient(index.$grad-1, index.$grad-2, var(--background-color-3));
+	@include index.background-gradient(index.$grad-2, index.$grad-1);
 }
 
 header {
@@ -36,6 +36,7 @@ header {
 		border-bottom: 2px solid index.$title-color-border;
 	}
 }
+
 #website-title {
 	justify-self: center;
 	align-self: center;
@@ -111,8 +112,8 @@ footer {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 	grid-template-rows: 1fr 2fr 1fr;
-	border-radius: 5px;
 	padding: 8px;
+	@include index.break-corners;
 }
 
 .option-text-element {
@@ -123,10 +124,29 @@ footer {
 	grid-row: 2;
 }
 
-.remove-option-btn {
-	margin-left: 10px;
-	padding: 0px 5px 2px 5px;
-	grid-column-start: 8;
+.choose-control-btn-style {
+	@include index.button-generic(var(--border-color), index.$title-color-background);
+	@include index.button-roundness;
+	color: var(--text-color-1);
+}
+
+.remove-option-btn-style {
+	padding: 0px;
+	grid-column: 8;
+	@include index.button-generic(var(--border-color), index.$title-color-background);
+	@include index.button-roundness;
+}
+
+.option-backward-btn-style {
+	grid-column: 7;
+	@include index.button-generic(var(--border-color), index.$title-color-background);
+	@include index.button-roundness;
+}
+
+.option-forward-btn-style {
+	grid-column: 8;
+	@include index.button-generic(var(--border-color), index.$title-color-background);
+	@include index.button-roundness;
 }
 
 .selected-option-display-container {
@@ -167,5 +187,17 @@ footer {
 @media only screen and (hover: hover) {
 	.nav-button-style:hover {
 		color: rgb( from var(--text-color-1) 150 150 150 );
+	}
+	.choose-control-btn-style:hover {
+		@include index.button-generic-hover(index.$title-color, index.$title-color-background);
+	}
+	.remove-option-btn-style:hover {
+		@include index.button-generic-hover(index.$title-color, index.$title-color-background);
+	}
+	.option-forward-btn-style:hover {
+		@include index.button-generic-hover(index.$title-color, index.$title-color-background);
+	}
+	.option-backward-btn-style:hover {
+		@include index.button-generic-hover(index.$title-color, index.$title-color-background);
 	}
 }

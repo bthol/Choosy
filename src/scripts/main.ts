@@ -27,7 +27,7 @@ function updateOptions(): void {
         optionColorsIndex = 0;
         let optionsHTML = '';
         for (let i = 0; i < options.length; i++) {
-            optionsHTML += `<div class="list-option-style" style="background-color:${optionColors[optionColorsIndex]}"><button type="button" class="remove-option-btn">x</button><div class="option-text-element">${options[i]?.option}</div><button type="button" class="option-backward-btn"><</button><button type="button" class="option-forward-btn">></button></div>`;
+            optionsHTML += `<div class="list-option-style" style="background-color:${optionColors[optionColorsIndex]}"><button type="button" class="remove-option-btn remove-option-btn-style"><i class="fa-solid fa-x fa-sm remove-option-btn"></i></button><div class="option-text-element">${options[i]?.option}</div><button type="button" class="option-backward-btn option-backward-btn-style"><i class="fa fa-arrow-left option-backward-btn"></i></button><button type="button" class="option-forward-btn option-forward-btn-style"><i class="fa fa-arrow-right option-forward-btn"></i></button></div>`;
             optionColorsIndex += 1;
             if (optionColorsIndex === optionColors.length) {
                 optionColorsIndex = 0;
@@ -122,9 +122,12 @@ function selectOption(): void {
 function removeOption(event: Event): void {
     if (options && event.currentTarget && event.currentTarget && event.target) {
         const node: Node = event.target as Node;
-        const parent: HTMLElement | null = node.parentElement;
-        if (parent) {
-            const div: HTMLElement | null = parent.querySelector('.option-text-element');
+        let root: HTMLElement | null = node.parentElement;
+        if (node.parentElement && node.parentElement.nodeName === 'BUTTON') {
+            root = node.parentElement?.parentElement;
+        }
+        if (root) {
+            const div: HTMLElement | null = root.querySelector('.option-text-element');
             if (div) {
                 const content: string = div.textContent;
                 for (let i = 0; i < options.length; i++) {
@@ -143,7 +146,7 @@ function removeOption(event: Event): void {
                 if (optionsIndex > optionsRand.length - 1) {
                     optionsIndex = 0;
                 }
-                parent.remove();
+                root.remove();
                 updateOptions();
             }
         }
@@ -174,11 +177,14 @@ function reorderOptions(i1: number, i2: number, len: number): {option: string}[]
 function optionBackward(event: Event): void {
     if (event.target) {
         const node: Node = event.target as Node;
-        const parent: HTMLElement | null = node.parentElement;
-        if (parent) {
-            const div: HTMLElement | null = parent.querySelector('.option-text-element');
-            if (div) {
-                const content: string = div.textContent;
+        let root: HTMLElement | null = node.parentElement;
+        if (node.parentElement && node.parentElement.nodeName === 'BUTTON') {
+            root = node.parentElement?.parentElement;
+        }
+        if (root) {
+            const text: HTMLElement | null = root.querySelector('.option-text-element');
+            if (text) {
+                const content: string = text.textContent;
                 for (let i = 0; i < options.length; i++) {
                     if (options[i]?.option === content && i - 1 > -1) {
                         options = reorderOptions(i, i - 1, options.length);
@@ -196,11 +202,14 @@ function optionBackward(event: Event): void {
 function optionForward(event: Event): void {
     if (event.target) {
         const node: Node = event.target as Node;
-        const parent: HTMLElement | null = node.parentElement;
-        if (parent) {
-            const div: HTMLElement | null = parent.querySelector('.option-text-element');
-            if (div) {
-                const content: string = div.textContent;
+        let root: HTMLElement | null = node.parentElement;
+        if (node.parentElement && node.parentElement.nodeName === 'BUTTON') {
+            root = node.parentElement?.parentElement;
+        }
+        if (root) {
+            const text: HTMLElement | null = root.querySelector('.option-text-element');
+            if (text) {
+                const content: string = text.textContent;
                 for (let i = 0; i < options.length; i++) {
                     if (options[i]?.option === content && i + 1 < options.length) {
                         options = reorderOptions(i, i + 1, options.length);
@@ -211,7 +220,6 @@ function optionForward(event: Event): void {
                         break;
                     }
                 }
-
             }
         }
     }

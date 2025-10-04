@@ -10,24 +10,34 @@
 	--shadow-color: #{$shadow-color};
 }
 
-@mixin background-gradient($grad-1, $grad-2, $grad-3) {
-	background: #c29393;
-	background: -webkit-linear-gradient(90deg, rgba(194, 147, 147, 1) 0%, rgba(249, 247, 241, 1) 20%, rgba(249, 247, 241, 1) 80%, rgba(194, 147, 147, 1) 100%);
-	background: -moz-linear-gradient(90deg, rgba(194, 147, 147, 1) 0%, rgba(249, 247, 241, 1) 20%, rgba(249, 247, 241, 1) 80%, rgba(194, 147, 147, 1) 100%);
-	background: linear-gradient(90deg, rgba(194, 147, 147, 1) 0%, rgba(249, 247, 241, 1) 20%, rgba(249, 247, 241, 1) 80%, rgba(194, 147, 147, 1) 100%);
+@mixin background-gradient($grad-1, $grad-2) {
+	background: $grad-1;
+	background: -webkit-linear-gradient(90deg, $grad-1 0%, $grad-2 20%, $grad-2 80%, $grad-1 100%);
+	background: -moz-linear-gradient(90deg, $grad-1 0%, $grad-2 20%, $grad-2 80%, $grad-2 100%);
+	background: linear-gradient(90deg, $grad-1 0%, $grad-2 20%, $grad-2 80%, $grad-1 100%);
 	// filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#C29393", endColorstr="#C29393", GradientType=1);
 }
-
-// @mixin background-gradient($grad-1, $grad-2, $grad-3) {
-// 	background: #c29393;
-// 	background: -webkit-linear-gradient(90deg, rgba(194, 147, 147, 1) 0%, rgba(249, 247, 241, 1) 20%, rgba(249, 247, 241, 1) 80%, rgba(237, 221, 83, 1) 100%);
-// 	background: -moz-linear-gradient(90deg, rgba(194, 147, 147, 1) 0%, rgba(249, 247, 241, 1) 20%, rgba(249, 247, 241, 1) 80%, rgba(237, 221, 83, 1) 100%);
-// 	background: linear-gradient(90deg, rgba(194, 147, 147, 1) 0%, rgba(249, 247, 241, 1) 20%, rgba(249, 247, 241, 1) 80%, rgba(237, 221, 83, 1) 100%);
-// 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#C29393", endColorstr="#EDDD53", GradientType=1);
-// }
 
 @mixin grid-center {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
 	gap: 10px;
+}
+
+@mixin button-generic($border-color, $background-color) {
+	background-color: $background-color;
+	border: 2px solid $border-color;
+}
+
+@mixin button-generic-hover($border-color, $background-color) {
+	background-color: hsl( from #{$background-color} 0 0% 85% );
+	border: 2px solid $border-color;
+}
+
+@mixin button-roundness {
+	border-radius: 5px;
+}
+
+@mixin break-corners {
+	border-radius: 5px;
 }

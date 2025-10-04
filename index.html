@@ -6,6 +6,7 @@
     <title>Choosy</title>
     <link rel="stylesheet" href="./build/public/style.css">
     <script defer src="./build/scripts/main.js"></script>
+    <script defer src="https://kit.fontawesome.com/0ddbc77e6b.js" crossorigin="anonymous"></script>
 </head>
 <body class="default-theme">
 
@@ -34,16 +35,16 @@
             <h2>Choose</h2>
             <div>
                 <label for="selection-method">Selection Method: </label>
-                <select name="selection-method" id="selection-method">
+                <select name="selection-method" id="selection-method" class="choose-control-btn-style">
                     <option value="random-order" selected>random order of options</option>
                     <option value="random-option">get a random option</option>
                 </select>
             </div>
             <div>
                 <input id="option-field" type="text" placeholder="add option" autocomplete="false" spellcheck="true" autofocus>
-                <button id="add-option-btn">add</button>
-                <button id="clear-options-btn">clear</button>
-                <button id="select-option-btn">select</button>
+                <button id="add-option-btn" class="choose-control-btn-style" type="button">add</button>
+                <button id="clear-options-btn" class="choose-control-btn-style" type="button">clear</button>
+                <button id="select-option-btn" class="choose-control-btn-style" type="button">select</button>
             </div>
         </section>
 
