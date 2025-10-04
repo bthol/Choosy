@@ -256,14 +256,14 @@ function goPage(pageNumber: Number) {
             const pageTitle: HTMLElement = document.createElement('h2');
             pageTitle.innerText = 'Choose';
             const div1: HTMLElement = document.createElement('div');
-            div1.innerHTML = `<label for="selection-method">Selection Method: </label><select name="selection-method" id="selection-method"><option value="random-order" selected>random order of options</option><option value="random-option">get a random option</option></select>`;
+            div1.innerHTML = `<label for="selection-method">Selection Method: </label><select name="selection-method" id="selection-method" class="choose-control-btn-style"><option value="random-order" selected>random order of options</option><option value="random-option">get a random option</option></select>`;
             const div2: HTMLElement = document.createElement('div');
-            div2.innerHTML = `<input id="option-field" type="text" placeholder="add option" autocomplete="false" spellcheck="true" autofocus> <button id="add-option-btn">add</button> <button id="clear-options-btn">clear</button> <button id="select-option-btn">select</button>`;
+            div2.innerHTML = `<input id="option-field" type="text" placeholder="add option" autocomplete="false" spellcheck="true" autofocus> <button id="add-option-btn" class="choose-control-btn-style" type="button">add</button> <button id="clear-options-btn" class="choose-control-btn-style" type="button">clear</button> <button id="select-option-btn" class="choose-control-btn-style" type="button">select</button>`;
             const section2: HTMLElement = document.createElement('section');
             section2.setAttribute('id', 'user-data');
             section2.setAttribute('class', 'section-separate-style section-margins');
             const div3: HTMLElement = document.createElement('div');
-            div3.innerHTML = `<div class="selected-option-display-container"><div id="selected-option-display" class="list-option-style"></div></div>`;
+            div3.innerHTML = `<div class="selected-option-display-container"><div id="selected-option-display"></div></div>`;
             const div4: HTMLElement = document.createElement('div');
             div4.setAttribute('class', 'options-container');
             section1.appendChild(pageTitle);
