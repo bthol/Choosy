@@ -1,10 +1,27 @@
 "use strict";
+;
 // ['#DB0F0F', '#DB780F', '#DBC70F', '#5adb0fff'];
 var optionColors = ['hsla(0, 98%, 72%, 1.00)', 'hsla(100, 98%, 42%, 1.00)', 'hsla(240, 98%, 77%, 1.00)'];
+var methods = [
+    'cost-benefit',
+    'random-order',
+    'random-option'
+];
 var optionColorsIndex = 0;
 var optionsIndex = 0;
 var options = [];
 var optionsRand = [];
+function validCostBenefitInput(event) {
+    var target = event.target;
+    if (target) {
+        var input = target.value;
+        var regex = /.*\D.*/;
+        if (regex.test(input) === true) {
+            target.value = input.split('').slice(0, target.value.length - 1).join('');
+        }
+    }
+}
+;
 function clearOptions() {
     var optionsContainer = document.querySelector('.options-container');
     var selectedDisplay = document.querySelector('#selected-option-display');
@@ -27,15 +44,7 @@ function updateOptions() {
     var _a;
     var optionsContainer = document.querySelector('.options-container');
     if (optionsContainer) {
-        optionColorsIndex = 0;
-        var optionsHTML = '';
-        for (var i = 0; i < options.length; i++) {
-            optionsHTML += "<div class=\"list-option-style\" style=\"background-color:".concat(optionColors[optionColorsIndex], "\"><button type=\"button\" class=\"remove-option-btn remove-option-btn-style\"><i class=\"fa-solid fa-x fa-sm remove-option-btn\"></i></button><div class=\"option-text-element\">").concat((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option, "</div><button type=\"button\" class=\"option-backward-btn option-backward-btn-style\"><i class=\"fa fa-arrow-left option-backward-btn\"></i></button><button type=\"button\" class=\"option-forward-btn option-forward-btn-style\"><i class=\"fa fa-arrow-right option-forward-btn\"></i></button></div>");
-            optionColorsIndex += 1;
-            if (optionColorsIndex === optionColors.length) {
-                optionColorsIndex = 0;
-            }
-        }
+        // clean up listeners
         document.querySelectorAll('.remove-option-btn').forEach(function (btn) {
             btn.removeEventListener('click', removeOption);
         });
@@ -45,7 +54,80 @@ function updateOptions() {
         document.querySelectorAll('.option-forward-btn').forEach(function (btn) {
             btn.removeEventListener('click', optionForward);
         });
-        optionsContainer.innerHTML = "".concat(optionsHTML);
+        document.querySelectorAll('.cost-input').forEach(function (input) {
+            input.removeEventListener('input', validCostBenefitInput);
+        });
+        document.querySelectorAll('.benefit-input').forEach(function (input) {
+            input.removeEventListener('input', validCostBenefitInput);
+        });
+        // get user data for conditional option formatting
+        var selectionMethod_1 = document.querySelector('#selection-method');
+        // init color index + clear old option elements
+        optionColorsIndex = 0;
+        optionsContainer.innerHTML = '';
+        // add new option elements
+        for (var i = 0; i < options.length; i++) {
+            // build option
+            var optionElement = document.createElement('div');
+            optionElement.setAttribute('class', 'list-option-style');
+            optionElement.setAttribute('style', "background-color:".concat(optionColors[optionColorsIndex]));
+            optionColorsIndex += 1;
+            if (optionColorsIndex === optionColors.length) {
+                optionColorsIndex = 0;
+            }
+            // add remove button
+            var removeBTN = document.createElement('button');
+            removeBTN.setAttribute('type', 'button');
+            removeBTN.setAttribute('class', 'remove-option-btn remove-option-btn-style');
+            var removeIcon = document.createElement('i');
+            removeIcon.setAttribute('class', 'fa-solid fa-x fa-sm remove-option-btn');
+            removeBTN.appendChild(removeIcon);
+            optionElement.appendChild(removeBTN);
+            // add text content
+            var textDiv = document.createElement('div');
+            textDiv.setAttribute('class', 'option-text-element');
+            textDiv.innerText = "".concat((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option);
+            optionElement.appendChild(textDiv);
+            // add backward button
+            var backBTN = document.createElement('button');
+            backBTN.setAttribute('type', 'button');
+            backBTN.setAttribute('class', 'option-backward-btn option-backward-btn-style');
+            var backIcon = document.createElement('i');
+            backIcon.setAttribute('class', 'fa fa-arrow-left option-backward-btn');
+            backBTN.appendChild(backIcon);
+            optionElement.appendChild(backBTN);
+            // add forward button
+            var forwardBTN = document.createElement('button');
+            forwardBTN.setAttribute('type', 'button');
+            forwardBTN.setAttribute('class', 'option-forward-btn option-forward-btn-style');
+            var forwardIcon = document.createElement('i');
+            forwardIcon.setAttribute('class', 'fa fa-arrow-right option-forward-btn');
+            forwardBTN.appendChild(forwardIcon);
+            optionElement.appendChild(forwardBTN);
+            // add conditional formatting
+            if (selectionMethod_1 !== null) {
+                if (selectionMethod_1.value === 'cost-benefit') {
+                    // add cost input
+                    var costInput = document.createElement('input');
+                    costInput.setAttribute('type', 'text');
+                    costInput.setAttribute('placeholder', 'cost');
+                    costInput.setAttribute('class', 'cost-input cost-input-style generic-input-style');
+                    optionElement.appendChild(costInput);
+                    // add benefit input
+                    var benefitInput = document.createElement('input');
+                    benefitInput.setAttribute('type', 'text');
+                    benefitInput.setAttribute('placeholder', 'benefit');
+                    benefitInput.setAttribute('class', 'benefit-input benefit-input-style generic-input-style');
+                    optionElement.appendChild(benefitInput);
+                }
+            }
+            else {
+                console.error('ERROR: conditional feature of option could not render');
+            }
+            // append option to options container
+            optionsContainer.appendChild(optionElement);
+        }
+        // add new listeners
         document.querySelectorAll('.remove-option-btn').forEach(function (btn) {
             btn.addEventListener('click', removeOption, { once: true });
         });
@@ -55,6 +137,12 @@ function updateOptions() {
         document.querySelectorAll('.option-forward-btn').forEach(function (btn) {
             btn.addEventListener('click', optionForward);
         });
+        document.querySelectorAll('.cost-input').forEach(function (input) {
+            input.addEventListener('input', validCostBenefitInput);
+        });
+        document.querySelectorAll('.benefit-input').forEach(function (input) {
+            input.addEventListener('input', validCostBenefitInput);
+        });
     }
     else {
         console.error('ERROR: options not updated');
@@ -63,7 +151,7 @@ function updateOptions() {
 ;
 function optionsRandomizeOrder() {
     var max = 1000;
-    if (options.length < max) {
+    if (options.length > 0 && options.length < max) {
         var unordered = [];
         var indexes = [];
         var indexCount = 0;
@@ -92,20 +180,64 @@ function optionsRandomizeOrder() {
 }
 ;
 function selectOption() {
-    var _a, _b;
+    var _a, _b, _c, _d, _e;
     if (options.length > 0) {
         var selectedDisplay_1 = document.querySelector('#selected-option-display');
-        var selectionMethod_1 = document.querySelector('#selection-method');
-        if (selectionMethod_1 && selectedDisplay_1) {
-            var methodStr = selectionMethod_1.value;
-            if (methodStr === 'random-order') {
+        var selectionMethod_2 = document.querySelector('#selection-method');
+        if (selectionMethod_2 && selectedDisplay_1) {
+            var methodStr = selectionMethod_2.value;
+            if (methodStr === methods[0]) { // 'cost-benefit'
+                var error_1 = false;
+                document.querySelectorAll('.cost-input').forEach(function (input, index) {
+                    if (input && options[index]) {
+                        var inputElement = input;
+                        console.log(inputElement.value);
+                        if (inputElement.value !== '') {
+                            options[index].cost = Number(inputElement.value);
+                        }
+                        else {
+                            error_1 = true;
+                        }
+                    }
+                });
+                if (!error_1) {
+                    document.querySelectorAll('.benefit-input').forEach(function (input, index) {
+                        if (input && options[index]) {
+                            var inputElement = input;
+                            if (inputElement.value !== '') {
+                                options[index].benefit = Number(inputElement.value);
+                            }
+                            else {
+                                error_1 = true;
+                            }
+                        }
+                    });
+                    if (!error_1) {
+                        var maximum = 0;
+                        var maxIndex = 0;
+                        for (var i in options) {
+                            if (options[i] && ((_a = options[i]) === null || _a === void 0 ? void 0 : _a.benefit) && ((_b = options[i]) === null || _b === void 0 ? void 0 : _b.cost)) {
+                                var costBenefitRatio = options[i].benefit / options[i].cost;
+                                if (costBenefitRatio > maximum) {
+                                    maximum = costBenefitRatio;
+                                    maxIndex = Number(i);
+                                }
+                            }
+                        }
+                        selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat((_c = options[maxIndex]) === null || _c === void 0 ? void 0 : _c.option, "</div>");
+                        selectedDisplay_1.setAttribute('style', "background-color: ".concat(optionColors[maxIndex % optionColors.length]));
+                        selectedDisplay_1.classList.add('list-option-style');
+                    }
+                }
+            }
+            else if (methodStr === methods[methods.length - 2]) { // 'random-order'
                 if (optionsRand) {
                     if (optionsIndex === 0) {
                         optionsRandomizeOrder();
                     }
                     var index = optionsRand[optionsIndex];
                     if (index !== undefined) {
-                        var choice_1 = (_a = options[index]) === null || _a === void 0 ? void 0 : _a.option;
+                        var choice_1 = (_d = options[index]) === null || _d === void 0 ? void 0 : _d.option;
                         selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat(choice_1, "</div>");
                         selectedDisplay_1.classList.add('list-option-style');
                         options.forEach(function (option, index) {
@@ -123,9 +255,9 @@ function selectOption() {
                     }
                 }
             }
-            else if (methodStr === 'random-option') {
+            else if (methodStr === methods[methods.length - 1]) { // 'random-option'
                 var i = Math.floor(Math.random() * options.length);
-                selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat((_b = options[i]) === null || _b === void 0 ? void 0 : _b.option, "</div>");
+                selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat((_e = options[i]) === null || _e === void 0 ? void 0 : _e.option, "</div>");
                 selectedDisplay_1.setAttribute('style', "background-color: ".concat(optionColors[i % optionColors.length]));
                 selectedDisplay_1.classList.add('list-option-style');
             }
@@ -299,7 +431,7 @@ function goPage(pageNumber) {
             var selectionOptionBtn_1 = document.querySelector('#select-option-btn');
             var addOptionBtn_1 = document.querySelector('#add-option-btn');
             var clearOPtionsBtn_1 = document.querySelector('#clear-options-btn');
-            var selectionMethod_2 = document.querySelector('#selection-method');
+            var selectionMethod_3 = document.querySelector('#selection-method');
             var optionField_1 = document.querySelector('#option-field');
             // add listeners
             if (selectionOptionBtn_1 && addOptionBtn_1 && clearOPtionsBtn_1) {
@@ -310,9 +442,9 @@ function goPage(pageNumber) {
             else {
                 console.error('ERROR: Button(s) not found');
             }
-            if (selectionMethod_2) {
-                selectionMethod_2.addEventListener('change', function () {
-                    if (selectionMethod_2.value === 'random-order') {
+            if (selectionMethod_3) {
+                selectionMethod_3.addEventListener('change', function () {
+                    if (selectionMethod_3.value === 'random-order') {
                         optionsRandomizeOrder();
                     }
                 });
@@ -444,8 +576,15 @@ else {
 }
 if (selectionMethod) {
     selectionMethod.addEventListener('change', function () {
-        if (selectionMethod.value === 'random-order') {
+        if (selectionMethod.value === 'cost-benefit') {
+            updateOptions();
+        }
+        else if (selectionMethod.value === 'random-order') {
             optionsRandomizeOrder();
+            updateOptions();
+        }
+        else if (selectionMethod.value === 'random-option') {
+            updateOptions();
         }
     });
 }

@@ -1,9 +1,29 @@
+interface optionInterface {
+    option: string,
+    cost?: number,
+    benefit?: number
+};
 // ['#DB0F0F', '#DB780F', '#DBC70F', '#5adb0fff'];
 const optionColors: string[] = ['hsla(0, 98%, 72%, 1.00)', 'hsla(100, 98%, 42%, 1.00)', 'hsla(240, 98%, 77%, 1.00)'];
+const methods: string[] = [
+    'cost-benefit',
+    'random-order',
+    'random-option'
+];
 let optionColorsIndex: number = 0;
 let optionsIndex: number = 0;
-let options: {option: string}[] = [];
+let options: optionInterface[] = [];
 let optionsRand: number[] = [];
+function validCostBenefitInput(event: Event) {
+    const target: HTMLInputElement = event.target as HTMLInputElement;
+    if (target) {
+        const input: string = target.value;
+        const regex = /.*\D.*/;
+        if (regex.test(input) === true) {
+            target.value = input.split('').slice(0, target.value.length - 1).join('');
+        }
+    }
+};
 function clearOptions(): void {
     const optionsContainer: HTMLElement | null = document.querySelector('.options-container');
     const selectedDisplay: HTMLElement | null = document.querySelector('#selected-option-display');
@@ -24,15 +44,7 @@ function clearOptions(): void {
 function updateOptions(): void {
     const optionsContainer: HTMLElement | null = document.querySelector('.options-container');
     if (optionsContainer) {
-        optionColorsIndex = 0;
-        let optionsHTML = '';
-        for (let i = 0; i < options.length; i++) {
-            optionsHTML += `<div class="list-option-style" style="background-color:${optionColors[optionColorsIndex]}"><button type="button" class="remove-option-btn remove-option-btn-style"><i class="fa-solid fa-x fa-sm remove-option-btn"></i></button><div class="option-text-element">${options[i]?.option}</div><button type="button" class="option-backward-btn option-backward-btn-style"><i class="fa fa-arrow-left option-backward-btn"></i></button><button type="button" class="option-forward-btn option-forward-btn-style"><i class="fa fa-arrow-right option-forward-btn"></i></button></div>`;
-            optionColorsIndex += 1;
-            if (optionColorsIndex === optionColors.length) {
-                optionColorsIndex = 0;
-            }
-        }
+        // clean up listeners
         document.querySelectorAll('.remove-option-btn').forEach((btn) => {
             btn.removeEventListener('click', removeOption);
         });
@@ -42,7 +54,79 @@ function updateOptions(): void {
         document.querySelectorAll('.option-forward-btn').forEach((btn) => {
             btn.removeEventListener('click', optionForward);
         });
-        optionsContainer.innerHTML = `${optionsHTML}`;
+        document.querySelectorAll('.cost-input').forEach((input) => {
+            input.removeEventListener('input', validCostBenefitInput);
+        });
+        document.querySelectorAll('.benefit-input').forEach((input) => {
+            input.removeEventListener('input', validCostBenefitInput);
+        });
+        // get user data for conditional option formatting
+        const selectionMethod: HTMLSelectElement | null = document.querySelector('#selection-method');
+        // init color index + clear old option elements
+        optionColorsIndex = 0;
+        optionsContainer.innerHTML = '';
+        // add new option elements
+        for (let i = 0; i < options.length; i++) {
+            // build option
+            const optionElement = document.createElement('div');
+            optionElement.setAttribute('class', 'list-option-style');
+            optionElement.setAttribute('style', `background-color:${optionColors[optionColorsIndex]}`);
+            optionColorsIndex += 1;
+            if (optionColorsIndex === optionColors.length) {
+                optionColorsIndex = 0;
+            }
+            // add remove button
+            const removeBTN = document.createElement('button');
+            removeBTN.setAttribute('type', 'button');
+            removeBTN.setAttribute('class', 'remove-option-btn remove-option-btn-style');
+            const removeIcon = document.createElement('i');
+            removeIcon.setAttribute('class', 'fa-solid fa-x fa-sm remove-option-btn');
+            removeBTN.appendChild(removeIcon);
+            optionElement.appendChild(removeBTN);
+            // add text content
+            const textDiv = document.createElement('div');
+            textDiv.setAttribute('class', 'option-text-element');
+            textDiv.innerText = `${options[i]?.option}`;
+            optionElement.appendChild(textDiv);
+            // add backward button
+            const backBTN = document.createElement('button');
+            backBTN.setAttribute('type', 'button');
+            backBTN.setAttribute('class', 'option-backward-btn option-backward-btn-style');
+            const backIcon = document.createElement('i');
+            backIcon.setAttribute('class', 'fa fa-arrow-left option-backward-btn');
+            backBTN.appendChild(backIcon);
+            optionElement.appendChild(backBTN);
+            // add forward button
+            const forwardBTN = document.createElement('button');
+            forwardBTN.setAttribute('type', 'button');
+            forwardBTN.setAttribute('class', 'option-forward-btn option-forward-btn-style');
+            const forwardIcon = document.createElement('i');
+            forwardIcon.setAttribute('class', 'fa fa-arrow-right option-forward-btn');
+            forwardBTN.appendChild(forwardIcon);
+            optionElement.appendChild(forwardBTN);
+            // add conditional formatting
+            if (selectionMethod !== null) {
+                if (selectionMethod.value === 'cost-benefit') {
+                    // add cost input
+                    const costInput = document.createElement('input');
+                    costInput.setAttribute('type', 'text');
+                    costInput.setAttribute('placeholder', 'cost');
+                    costInput.setAttribute('class', 'cost-input cost-input-style generic-input-style');
+                    optionElement.appendChild(costInput);
+                    // add benefit input
+                    const benefitInput = document.createElement('input');
+                    benefitInput.setAttribute('type', 'text');
+                    benefitInput.setAttribute('placeholder', 'benefit');
+                    benefitInput.setAttribute('class', 'benefit-input benefit-input-style generic-input-style');
+                    optionElement.appendChild(benefitInput);
+                }
+            } else {
+                console.error('ERROR: conditional feature of option could not render');
+            }
+            // append option to options container
+            optionsContainer.appendChild(optionElement);
+        }
+        // add new listeners
         document.querySelectorAll('.remove-option-btn').forEach((btn) => {
             btn.addEventListener('click', removeOption, {once: true});
         });
@@ -52,13 +136,19 @@ function updateOptions(): void {
         document.querySelectorAll('.option-forward-btn').forEach((btn) => {
             btn.addEventListener('click', optionForward);
         });
+        document.querySelectorAll('.cost-input').forEach((input) => {
+            input.addEventListener('input', validCostBenefitInput);
+        });
+        document.querySelectorAll('.benefit-input').forEach((input) => {
+            input.addEventListener('input', validCostBenefitInput);
+        });
     } else {
         console.error('ERROR: options not updated');
     }
 };
 function optionsRandomizeOrder(): void {
     const max: number = 1000;
-    if (options.length < max) {
+    if (options.length > 0 && options.length < max) {
         const unordered: number[] = [];
         let indexes: number[] = [];
         let indexCount: number = 0;
@@ -86,10 +176,51 @@ function optionsRandomizeOrder(): void {
 function selectOption(): void {
     if (options.length > 0) {
         const selectedDisplay: HTMLElement | null = document.querySelector('#selected-option-display');
-        const selectionMethod: HTMLSelectElement  | null = document.querySelector('#selection-method');
+        const selectionMethod: HTMLSelectElement | null = document.querySelector('#selection-method');
         if (selectionMethod && selectedDisplay) {
             const methodStr: string = selectionMethod.value;
-            if (methodStr === 'random-order') {
+            if (methodStr === methods[0]) { // 'cost-benefit'
+                let error: boolean = false;
+                document.querySelectorAll('.cost-input').forEach((input, index) => {
+                    if (input && options[index]) {
+                        const inputElement: HTMLInputElement = input as HTMLInputElement;
+                        console.log(inputElement.value);
+                        if (inputElement.value !== '') {
+                            options[index].cost = Number(inputElement.value);
+                        } else {
+                            error = true;
+                        }
+                    }
+                });
+                if (!error) {
+                    document.querySelectorAll('.benefit-input').forEach((input, index) => {
+                        if (input && options[index]) {
+                            const inputElement: HTMLInputElement = input as HTMLInputElement;
+                            if (inputElement.value !== '') {
+                                options[index].benefit = Number(inputElement.value);
+                            } else {
+                                error = true;
+                            }
+                        }
+                    });
+                    if (!error) {
+                        let maximum: number = 0;
+                        let maxIndex: number = 0;
+                        for (const i in options) {
+                            if (options[i] && options[i]?.benefit && options[i]?.cost) {
+                                const costBenefitRatio: number = options[i].benefit / options[i].cost;
+                                if (costBenefitRatio > maximum) {
+                                    maximum = costBenefitRatio;
+                                    maxIndex = Number(i);
+                                }
+                            }
+                        }
+                        selectedDisplay.innerHTML = `<div class="option-text-element">${options[maxIndex]?.option}</div>`;
+                        selectedDisplay.setAttribute('style', `background-color: ${optionColors[maxIndex % optionColors.length]}`);
+                        selectedDisplay.classList.add('list-option-style');
+                    }
+                }
+            } else if (methodStr === methods[methods.length - 2]) { // 'random-order'
                 if (optionsRand) {
                     if (optionsIndex === 0) {
                         optionsRandomizeOrder();
@@ -112,7 +243,7 @@ function selectOption(): void {
                         console.error('ERROR: data not found at index during selection');
                     }
                 }
-            } else if (methodStr === 'random-option') {
+            } else if (methodStr === methods[methods.length - 1]) { // 'random-option'
                 const i: number = Math.floor(Math.random() * options.length);
                 selectedDisplay.innerHTML = `<div class="option-text-element">${options[i]?.option}</div>`;
                 selectedDisplay.setAttribute('style', `background-color: ${optionColors[i % optionColors.length]}`);
@@ -154,7 +285,7 @@ function removeOption(event: Event): void {
         }
     }
 };
-function reorderOptions(i1: number, i2: number, len: number): {option: string}[] {
+function reorderOptions(i1: number, i2: number, len: number): optionInterface[] {
     let arr: number[] = [];
     for (let i = 0; i < len; i++) {
         arr.push(i);
@@ -168,7 +299,7 @@ function reorderOptions(i1: number, i2: number, len: number): {option: string}[]
             arr.splice(i1 + 1, 1);
         }
     }
-    let optionsReorder: {option: string}[] = [];
+    let optionsReorder: optionInterface[] = [];
     for (const i of arr) {
         if (options[i]) {
             optionsReorder.push(options[i]);
@@ -413,8 +544,13 @@ if (selectionOptionBtn && addOptionBtn && clearOPtionsBtn) {
 }
 if (selectionMethod) {
     selectionMethod.addEventListener('change', () => {
-        if (selectionMethod.value === 'random-order') {
+        if (selectionMethod.value === 'cost-benefit') {
+            updateOptions();
+        } else if (selectionMethod.value === 'random-order') {
             optionsRandomizeOrder();
+            updateOptions();
+        } else if (selectionMethod.value === 'random-option') {
+            updateOptions();
         }
     });
 }

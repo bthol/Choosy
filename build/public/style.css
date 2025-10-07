@@ -113,6 +113,10 @@ footer > small {
   align-self: center;
 }
 
+#option-field {
+  margin-right: 2px;
+}
+
 .options-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -125,7 +129,7 @@ footer > small {
   grid-template-rows: 1fr 2fr 1fr;
   padding: 8px;
   border: 2px solid var(--border-color);
-  border-radius: 5px;
+  border-radius: 3px;
 }
 
 .option-text-element {
@@ -136,19 +140,40 @@ footer > small {
   grid-row: 2;
 }
 
+.cost-input-style {
+  grid-row: 3;
+  grid-column: 1/span 3;
+  margin: 1px;
+  margin-right: 3px;
+}
+
+.benefit-input-style {
+  grid-row: 3;
+  grid-column: 4/span 3;
+  margin: 1px;
+}
+
 .nav-button-style {
   background: none;
   border: none;
   cursor: pointer;
 }
 
-.choose-control-btn-style {
+.generic-btn-style {
   margin: 2px;
   background-color: hsl(from var(--background-color-3) 0 0% 115%);
   border: 2px solid var(--border-color);
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 6px;
   color: var(--text-color-1);
+}
+
+.generic-input-style {
+  margin: 2px;
+  background-color: hsl(from var(--background-color-3) 0 0% 115%);
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  border-radius: 3px;
 }
 
 .remove-option-btn-style {
@@ -158,7 +183,7 @@ footer > small {
   background-color: hsl(from var(--background-color-3) 0 0% 115%);
   border: 2px solid var(--border-color);
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 6px;
 }
 
 .option-backward-btn-style {
@@ -167,7 +192,7 @@ footer > small {
   background-color: hsl(from var(--background-color-3) 0 0% 115%);
   border: 2px solid var(--border-color);
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 6px;
 }
 
 .option-forward-btn-style {
@@ -176,7 +201,7 @@ footer > small {
   background-color: hsl(from var(--background-color-3) 0 0% 115%);
   border: 2px solid var(--border-color);
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 6px;
 }
 
 .selected-option-display-container {
@@ -217,7 +242,11 @@ footer > small {
   .nav-button-style:hover {
     color: rgb(from var(--text-color-1) 150 150 150);
   }
-  .choose-control-btn-style:hover {
+  .generic-btn-style:hover {
+    background-color: hsl(from var(--background-color-3) 0 0% 85%);
+    border: 2px solid hsl(3, 99%, 52%);
+  }
+  .generic-input-style:hover {
     background-color: hsl(from var(--background-color-3) 0 0% 85%);
     border: 2px solid hsl(3, 99%, 52%);
   }

@@ -35,16 +35,17 @@
             <h2>Choose</h2>
             <div>
                 <label for="selection-method">Selection Method: </label>
-                <select name="selection-method" id="selection-method" class="choose-control-btn-style">
+                <select name="selection-method" id="selection-method" class="generic-btn-style">
+                    <option value="cost-benefit" selected>cost benefit analysis</option>
                     <option value="random-order" selected>random order of options</option>
                     <option value="random-option">get a random option</option>
                 </select>
             </div>
             <div>
-                <input id="option-field" type="text" placeholder="add option" autocomplete="false" spellcheck="true" autofocus>
-                <button id="add-option-btn" class="choose-control-btn-style" type="button">add</button>
-                <button id="clear-options-btn" class="choose-control-btn-style" type="button">clear</button>
-                <button id="select-option-btn" class="choose-control-btn-style" type="button">select</button>
+                <input id="option-field" class="generic-input-style" type="text" placeholder="add option" autocomplete="false" spellcheck="true" autofocus>
+                <button id="add-option-btn" class="generic-btn-style" type="button">add</button>
+                <button id="clear-options-btn" class="generic-btn-style" type="button">clear</button>
+                <button id="select-option-btn" class="generic-btn-style" type="button">select</button>
             </div>
         </section>
 

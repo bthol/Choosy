@@ -100,6 +100,10 @@ footer {
 	}
 }
 
+#option-field {
+	margin-right: 2px;
+}
+
 .options-container {
 	@include index.grid-center;
 }
@@ -121,6 +125,19 @@ footer {
 	grid-row: 2;
 }
 
+.cost-input-style {
+	grid-row: 3;
+	grid-column: 1 / span 3;
+	margin: 1px;
+	margin-right: 3px;
+}
+
+.benefit-input-style {
+	grid-row: 3;
+	grid-column: 4 / span 3;
+	margin: 1px;
+}
+
 // BUTTONS
 .nav-button-style {
 	background: none;
@@ -128,29 +145,34 @@ footer {
 	cursor: pointer;
 }
 
-.choose-control-btn-style {
+.generic-btn-style {
 	@include index.button-generic(var(--border-color), var(--background-color-3));
-	@include index.button-roundness;
+	@include index.round-corners;
 	color: var(--text-color-1);
+}
+
+.generic-input-style {
+	@include index.button-generic(var(--border-color), var(--background-color-3));
+	@include index.break-corners;
 }
 
 .remove-option-btn-style {
 	padding: 0px;
 	grid-column: 8;
 	@include index.button-generic(var(--border-color), var(--background-color-3));
-	@include index.button-roundness;
+	@include index.round-corners;
 }
 
 .option-backward-btn-style {
 	grid-column: 7;
 	@include index.button-generic(var(--border-color), var(--background-color-3));
-	@include index.button-roundness;
+	@include index.round-corners;
 }
 
 .option-forward-btn-style {
 	grid-column: 8;
 	@include index.button-generic(var(--border-color), var(--background-color-3));
-	@include index.button-roundness;
+	@include index.round-corners;
 }
 
 .selected-option-display-container {
@@ -192,7 +214,10 @@ footer {
 	.nav-button-style:hover {
 		color: rgb( from var(--text-color-1) 150 150 150 );
 	}
-	.choose-control-btn-style:hover {
+	.generic-btn-style:hover {
+		@include index.button-generic-hover(index.$detailing, var(--background-color-3));
+	}
+	.generic-input-style:hover {
 		@include index.button-generic-hover(index.$detailing, var(--background-color-3));
 	}
 	.remove-option-btn-style:hover {

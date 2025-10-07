@@ -36,10 +36,10 @@
 	border: 2px solid $border-color;
 }
 
-@mixin button-roundness {
-	border-radius: 5px;
+@mixin round-corners {
+	border-radius: 6px;
 }
 
 @mixin break-corners {
-	border-radius: 5px;
+	border-radius: 3px;
 }
