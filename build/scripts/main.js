@@ -410,9 +410,9 @@ function goPage(pageNumber) {
             var pageTitle = document.createElement('h2');
             pageTitle.innerText = 'Choose';
             var div1 = document.createElement('div');
-            div1.innerHTML = "<label for=\"selection-method\">Selection Method: </label><select name=\"selection-method\" id=\"selection-method\" class=\"choose-control-btn-style\"><option value=\"random-order\" selected>random order of options</option><option value=\"random-option\">get a random option</option></select>";
+            div1.innerHTML = "<label for=\"selection-method\">Selection Method: </label><select name=\"selection-method\" id=\"selection-method\" class=\"generic-btn-style\"><option value=\"cost-benefit\" selected>cost benefit analysis</option><option value=\"random-order\" >random order of options</option><option value=\"random-option\">get a random option</option></select>";
             var div2 = document.createElement('div');
-            div2.innerHTML = "<input id=\"option-field\" type=\"text\" placeholder=\"add option\" autocomplete=\"false\" spellcheck=\"true\" autofocus> <button id=\"add-option-btn\" class=\"choose-control-btn-style\" type=\"button\">add</button> <button id=\"clear-options-btn\" class=\"choose-control-btn-style\" type=\"button\">clear</button> <button id=\"select-option-btn\" class=\"choose-control-btn-style\" type=\"button\">select</button>";
+            div2.innerHTML = "<input id=\"option-field\" class=\"generic-input-style\" type=\"text\" placeholder=\"add option\" autocomplete=\"false\" spellcheck=\"true\" autofocus> <button id=\"add-option-btn\" class=\"generic-btn-style\" type=\"button\">add</button> <button id=\"clear-options-btn\" class=\"generic-btn-style\" type=\"button\">clear</button> <button id=\"select-option-btn\" class=\"generic-btn-style\" type=\"button\">select</button>";
             var section2 = document.createElement('section');
             section2.setAttribute('id', 'user-data');
             section2.setAttribute('class', 'section-separate-style section-margins');
@@ -492,15 +492,20 @@ function goPage(pageNumber) {
             var pageTitle = document.createElement('h2');
             pageTitle.innerText = 'Manual';
             var p1 = document.createElement('p');
-            p1.innerText = '1.) Enter each option into the options field and click the add button.';
+            p1.innerText = '1.) Choose the selection method you want using the drop down menu.';
             var p2 = document.createElement('p');
-            p2.innerText = '2.) Choose the selection method you want using the drop down menu.';
+            p2.innerText = '2.) Enter each option name into the options field and hit enter or click the add button.';
             var p3 = document.createElement('p');
-            p3.innerText = '3.) Click the select button to randomly select one of the options.';
+            p3.innerText = '3.) Depending on your chosen selection method, you can add information about each option.';
+            var p4 = document.createElement('p');
+            p4.innerText = '4.) Click the select button to run the selection method on your options and one of the options will be displayed as seleted.';
+            var p5 = document.createElement('p');
+            p5.innerText = 'NOTE: You may optionally rearrange the options with the backward and forward arrows available in each option.';
             section1.appendChild(pageTitle);
             section1.appendChild(p1);
             section1.appendChild(p2);
             section1.appendChild(p3);
+            section1.appendChild(p4);
             main.appendChild(section1);
         }
         else {
