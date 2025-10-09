@@ -12,12 +12,40 @@ var optionsIndex = 0;
 var options = [];
 var optionsRand = [];
 function validCostBenefitInput(event) {
+    var _a;
     var target = event.target;
     if (target) {
         var input = target.value;
         var regex = /.*\D.*/;
         if (regex.test(input) === true) {
             target.value = input.split('').slice(0, target.value.length - 1).join('');
+        }
+        else {
+            if (options && event.currentTarget && event.currentTarget && event.target) {
+                var node = event.target;
+                var root = node.parentElement;
+                if (node.parentElement && node.parentElement.nodeName === 'BUTTON') {
+                    root = (_a = node.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement;
+                }
+                if (root) {
+                    var div = root.querySelector('.option-text-element');
+                    if (div) {
+                        var content = div.textContent;
+                        for (var i = 0; i < options.length; i++) {
+                            var obj = options[i];
+                            if (obj !== undefined && obj.option === content) {
+                                if (target.classList.contains('cost-input')) {
+                                    obj.cost = Number(input);
+                                }
+                                else if (target.classList.contains('benefit-input')) {
+                                    obj.benefit = Number(input);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -108,31 +136,47 @@ function renderOptions() {
             // add conditional formatting
             if (selectionMethod_1 !== null) {
                 if (selectionMethod_1.value === ((_b = methods[0]) === null || _b === void 0 ? void 0 : _b.value)) {
+                    // get data for rendering
+                    var dat = options[i];
                     // add cost input
                     var costInput = document.createElement('input');
                     costInput.setAttribute('type', 'text');
                     costInput.setAttribute('placeholder', 'cost');
                     costInput.setAttribute('class', 'cost-input cost-input-style generic-input-style');
+                    if ((dat === null || dat === void 0 ? void 0 : dat.cost) !== undefined) {
+                        costInput.setAttribute('value', "".concat(dat.cost));
+                    }
                     optionElement.appendChild(costInput);
                     // add benefit input
                     var benefitInput = document.createElement('input');
                     benefitInput.setAttribute('type', 'text');
                     benefitInput.setAttribute('placeholder', 'benefit');
                     benefitInput.setAttribute('class', 'benefit-input benefit-input-style generic-input-style');
+                    if ((dat === null || dat === void 0 ? void 0 : dat.benefit) !== undefined) {
+                        benefitInput.setAttribute('value', "".concat(dat.benefit));
+                    }
                     optionElement.appendChild(benefitInput);
                 }
                 else if (selectionMethod_1.value === ((_c = methods[1]) === null || _c === void 0 ? void 0 : _c.value)) {
+                    // get data for rendering
+                    var dat = options[i];
                     // add cost input
                     var costInput = document.createElement('input');
                     costInput.setAttribute('type', 'text');
                     costInput.setAttribute('placeholder', 'cost');
                     costInput.setAttribute('class', 'cost-input cost-input-style generic-input-style');
+                    if ((dat === null || dat === void 0 ? void 0 : dat.cost) !== undefined) {
+                        costInput.setAttribute('value', "".concat(dat.cost));
+                    }
                     optionElement.appendChild(costInput);
                     // add benefit input
                     var benefitInput = document.createElement('input');
                     benefitInput.setAttribute('type', 'text');
                     benefitInput.setAttribute('placeholder', 'benefit');
                     benefitInput.setAttribute('class', 'benefit-input benefit-input-style generic-input-style');
+                    if ((dat === null || dat === void 0 ? void 0 : dat.benefit) !== undefined) {
+                        benefitInput.setAttribute('value', "".concat(dat.benefit));
+                    }
                     optionElement.appendChild(benefitInput);
                 }
             }
@@ -206,7 +250,6 @@ function selectOption() {
                 document.querySelectorAll('.cost-input').forEach(function (input, index) {
                     if (input && options[index]) {
                         var inputElement = input;
-                        console.log(inputElement.value);
                         if (inputElement.value !== '') {
                             options[index].cost = Number(inputElement.value);
                         }
@@ -291,9 +334,6 @@ function selectOption() {
             }
             else if (methodStr === ((_j = methods[methods.length - 2]) === null || _j === void 0 ? void 0 : _j.value)) { // 'random-order'
                 if (optionsRand) {
-                    if (optionsIndex === 0) {
-                        optionsRandomizeOrder();
-                    }
                     var index = optionsRand[optionsIndex];
                     if (index !== undefined) {
                         var choice_1 = (_k = options[index]) === null || _k === void 0 ? void 0 : _k.option;
@@ -516,10 +556,10 @@ function renderPage(pageNumber) {
                 });
             }
             if (optionField_1) {
-                optionField_1.focus();
                 optionField_1.addEventListener('keydown', function (event) {
                     if (event.key === 'Enter') {
                         addOption();
+                        optionField_1.focus();
                     }
                 });
             }
@@ -660,6 +700,6 @@ if (optionField) {
     });
 }
 else {
-    console.error('ERROR: keyboard compatability degraded');
+    console.error('ERROR: keyboard accessibility degraded');
 }
 //# sourceMappingURL=main.js.map

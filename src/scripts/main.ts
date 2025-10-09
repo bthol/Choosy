@@ -21,6 +21,31 @@ function validCostBenefitInput(event: Event) {
         const regex = /.*\D.*/;
         if (regex.test(input) === true) {
             target.value = input.split('').slice(0, target.value.length - 1).join('');
+        } else {
+            if (options && event.currentTarget && event.currentTarget && event.target) {
+                const node: Node = event.target as Node;
+                let root: HTMLElement | null = node.parentElement;
+                if (node.parentElement && node.parentElement.nodeName === 'BUTTON') {
+                    root = node.parentElement?.parentElement;
+                }
+                if (root) {
+                    const div: HTMLElement | null = root.querySelector('.option-text-element');
+                    if (div) {
+                        const content: string = div.textContent;
+                        for (let i = 0; i < options.length; i++) {
+                            const obj: optionInterface | undefined = options[i];
+                            if (obj !== undefined && obj.option === content) {
+                                if (target.classList.contains('cost-input')) {
+                                    obj.cost = Number(input);
+                                } else if (target.classList.contains('benefit-input')) {
+                                    obj.benefit = Number(input);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 };
@@ -108,30 +133,46 @@ function renderOptions(): void {
             // add conditional formatting
             if (selectionMethod !== null) {
                 if (selectionMethod.value === methods[0]?.value) {
+                    // get data for rendering
+                    const dat: optionInterface | undefined = options[i];
                     // add cost input
                     const costInput = document.createElement('input');
                     costInput.setAttribute('type', 'text');
                     costInput.setAttribute('placeholder', 'cost');
                     costInput.setAttribute('class', 'cost-input cost-input-style generic-input-style');
+                    if (dat?.cost !== undefined) {
+                        costInput.setAttribute('value', `${dat.cost}`);
+                    }
                     optionElement.appendChild(costInput);
                     // add benefit input
                     const benefitInput = document.createElement('input');
                     benefitInput.setAttribute('type', 'text');
                     benefitInput.setAttribute('placeholder', 'benefit');
                     benefitInput.setAttribute('class', 'benefit-input benefit-input-style generic-input-style');
+                    if (dat?.benefit !== undefined) {
+                        benefitInput.setAttribute('value', `${dat.benefit}`);
+                    }
                     optionElement.appendChild(benefitInput);
                 } else if (selectionMethod.value === methods[1]?.value) {
+                    // get data for rendering
+                    const dat: optionInterface | undefined = options[i];
                     // add cost input
                     const costInput = document.createElement('input');
                     costInput.setAttribute('type', 'text');
                     costInput.setAttribute('placeholder', 'cost');
                     costInput.setAttribute('class', 'cost-input cost-input-style generic-input-style');
+                    if (dat?.cost !== undefined) {
+                        costInput.setAttribute('value', `${dat.cost}`);
+                    }
                     optionElement.appendChild(costInput);
                     // add benefit input
                     const benefitInput = document.createElement('input');
                     benefitInput.setAttribute('type', 'text');
                     benefitInput.setAttribute('placeholder', 'benefit');
                     benefitInput.setAttribute('class', 'benefit-input benefit-input-style generic-input-style');
+                    if (dat?.benefit !== undefined) {
+                        benefitInput.setAttribute('value', `${dat.benefit}`);
+                    }
                     optionElement.appendChild(benefitInput);
                 }
             } else {
@@ -198,7 +239,6 @@ function selectOption(): void {
                 document.querySelectorAll('.cost-input').forEach((input, index) => {
                     if (input && options[index]) {
                         const inputElement: HTMLInputElement = input as HTMLInputElement;
-                        console.log(inputElement.value);
                         if (inputElement.value !== '') {
                             options[index].cost = Number(inputElement.value);
                         } else {
@@ -277,9 +317,6 @@ function selectOption(): void {
                 }
             } else if (methodStr === methods[methods.length - 2]?.value) { // 'random-order'
                 if (optionsRand) {
-                    if (optionsIndex === 0) {
-                        optionsRandomizeOrder();
-                    }
                     const index: number | undefined = optionsRand[optionsIndex];
                     if (index !== undefined) {
                         const choice: string | undefined = options[index]?.option;
@@ -487,10 +524,10 @@ function renderPage(pageNumber: Number) {
                 });
             }
             if (optionField) {
-                optionField.focus();
                 optionField.addEventListener('keydown', (event: KeyboardEvent) => {
                     if (event.key === 'Enter') {
                         addOption();
+                        optionField.focus();
                     }
                 });
             } else {
@@ -621,5 +658,5 @@ if (optionField) {
         }
     });
 } else {
-    console.error('ERROR: keyboard compatability degraded');
+    console.error('ERROR: keyboard accessibility degraded');
 }
