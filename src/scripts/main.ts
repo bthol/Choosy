@@ -3,12 +3,11 @@ interface optionInterface {
     cost?: number,
     benefit?: number
 };
-// ['#DB0F0F', '#DB780F', '#DBC70F', '#5adb0fff'];
 const optionColors: string[] = ['hsla(0, 98%, 72%, 1.00)', 'hsla(100, 98%, 42%, 1.00)', 'hsla(240, 98%, 77%, 1.00)'];
-const methods: string[] = [
-    'cost-benefit',
-    'random-order',
-    'random-option'
+const methods: {value: string, text: string}[] = [
+    {value: 'cost-benefit', text: 'cost benefit analysis'},
+    {value: 'random-order', text: 'random order of options'},
+    {value: 'random-option', text: 'select a random option'}
 ];
 let optionColorsIndex: number = 0;
 let optionsIndex: number = 0;
@@ -39,9 +38,10 @@ function clearOptions(): void {
     }
     if (optionField) {
         optionField.value = '';
+        optionField.focus();
     }
 };
-function updateOptions(): void {
+function renderOptions(): void {
     const optionsContainer: HTMLElement | null = document.querySelector('.options-container');
     if (optionsContainer) {
         // clean up listeners
@@ -179,7 +179,7 @@ function selectOption(): void {
         const selectionMethod: HTMLSelectElement | null = document.querySelector('#selection-method');
         if (selectionMethod && selectedDisplay) {
             const methodStr: string = selectionMethod.value;
-            if (methodStr === methods[0]) { // 'cost-benefit'
+            if (methodStr === methods[0]?.value) { // 'cost-benefit'
                 let error: boolean = false;
                 document.querySelectorAll('.cost-input').forEach((input, index) => {
                     if (input && options[index]) {
@@ -220,7 +220,7 @@ function selectOption(): void {
                         selectedDisplay.classList.add('list-option-style');
                     }
                 }
-            } else if (methodStr === methods[methods.length - 2]) { // 'random-order'
+            } else if (methodStr === methods[methods.length - 2]?.value) { // 'random-order'
                 if (optionsRand) {
                     if (optionsIndex === 0) {
                         optionsRandomizeOrder();
@@ -243,7 +243,7 @@ function selectOption(): void {
                         console.error('ERROR: data not found at index during selection');
                     }
                 }
-            } else if (methodStr === methods[methods.length - 1]) { // 'random-option'
+            } else if (methodStr === methods[methods.length - 1]?.value) { // 'random-option'
                 const i: number = Math.floor(Math.random() * options.length);
                 selectedDisplay.innerHTML = `<div class="option-text-element">${options[i]?.option}</div>`;
                 selectedDisplay.setAttribute('style', `background-color: ${optionColors[i % optionColors.length]}`);
@@ -280,7 +280,7 @@ function removeOption(event: Event): void {
                     optionsIndex = 0;
                 }
                 root.remove();
-                updateOptions();
+                renderOptions();
             }
         }
     }
@@ -324,7 +324,7 @@ function optionBackward(event: Event): void {
                         if (selectionMethod && selectionMethod.value === 'random-order') {
                             optionsRandomizeOrder();
                         }
-                        updateOptions();
+                        renderOptions();
                         break;
                     }
                 }
@@ -349,7 +349,7 @@ function optionForward(event: Event): void {
                         if (selectionMethod && selectionMethod.value === 'random-order') {
                             optionsRandomizeOrder();
                         }
-                        updateOptions();
+                        renderOptions();
                         break;
                     }
                 }
@@ -367,11 +367,12 @@ function addOption(): void {
         if (optionStr && optionsContainer && selectionMethod) {
             const option: {option: string} = {option: optionStr};
             options.push(option);
-            updateOptions();
+            renderOptions();
         }
+        optionField.focus();
     }
 };
-function goPage(pageNumber: Number) {
+function renderPage(pageNumber: Number) {
     if (pageNumber === 0) { // choose page
         const main: HTMLElement | null = document.querySelector('main');
         if (main) {
@@ -387,7 +388,12 @@ function goPage(pageNumber: Number) {
             const pageTitle: HTMLElement = document.createElement('h2');
             pageTitle.innerText = 'Choose';
             const div1: HTMLElement = document.createElement('div');
-            div1.innerHTML = `<label for="selection-method">Selection Method: </label><select name="selection-method" id="selection-method" class="generic-btn-style"><option value="cost-benefit" selected>cost benefit analysis</option><option value="random-order" >random order of options</option><option value="random-option">get a random option</option></select>`;
+            let div1HTML: string = '<label for="selection-method">Selection Method: </label><select name="selection-method" id="selection-method" class="generic-btn-style">';
+            for (const obj of methods) {
+                div1HTML += `<option value="${obj?.value}">${obj?.text}</option>`;
+            }
+            div1HTML += '</select>';
+            div1.innerHTML = div1HTML;
             const div2: HTMLElement = document.createElement('div');
             div2.innerHTML = `<input id="option-field" class="generic-input-style" type="text" placeholder="add option" autocomplete="false" spellcheck="true" autofocus> <button id="add-option-btn" class="generic-btn-style" type="button">add</button> <button id="clear-options-btn" class="generic-btn-style" type="button">clear</button> <button id="select-option-btn" class="generic-btn-style" type="button">select</button>`;
             const section2: HTMLElement = document.createElement('section');
@@ -520,29 +526,23 @@ function goPage(pageNumber: Number) {
         }
     }
 };
+renderPage(0);
 const navBTNS: NodeList | null = document.querySelectorAll('.page-nav');
 if (navBTNS) {
     navBTNS.forEach((btn, index) => {
-        btn.addEventListener('click', () => {goPage(index)});
+        btn.addEventListener('click', () => {renderPage(index)});
     });
 } else {
     console.error('ERROR: nav buttons not found');
 }
-// scan page
 const selectionOptionBtn: Element | null = document.querySelector('#select-option-btn');
 const addOptionBtn: Element | null = document.querySelector('#add-option-btn');
 const clearOPtionsBtn: Element | null = document.querySelector('#clear-options-btn');
 const selectionMethod: HTMLSelectElement  | null = document.querySelector('#selection-method');
 const optionField: HTMLInputElement | null = document.querySelector('#option-field');
-// add listeners
 if (selectionOptionBtn && addOptionBtn && clearOPtionsBtn) {
     selectionOptionBtn.addEventListener('click', selectOption);
-    addOptionBtn.addEventListener('click', () => {
-        if (optionField) {
-            optionField.focus();
-        }
-        addOption();
-    });
+    addOptionBtn.addEventListener('click', addOption);
     clearOPtionsBtn.addEventListener('click', clearOptions);
 } else {
     console.error('ERROR: Button(s) not found');
@@ -550,12 +550,15 @@ if (selectionOptionBtn && addOptionBtn && clearOPtionsBtn) {
 if (selectionMethod) {
     selectionMethod.addEventListener('change', () => {
         if (selectionMethod.value === 'cost-benefit') {
-            updateOptions();
+            renderOptions();
         } else if (selectionMethod.value === 'random-order') {
             optionsRandomizeOrder();
-            updateOptions();
+            renderOptions();
         } else if (selectionMethod.value === 'random-option') {
-            updateOptions();
+            renderOptions();
+        }
+        if (optionField) {
+            optionField.focus();
         }
     });
 }

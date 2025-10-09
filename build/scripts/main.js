@@ -1,11 +1,10 @@
 "use strict";
 ;
-// ['#DB0F0F', '#DB780F', '#DBC70F', '#5adb0fff'];
 var optionColors = ['hsla(0, 98%, 72%, 1.00)', 'hsla(100, 98%, 42%, 1.00)', 'hsla(240, 98%, 77%, 1.00)'];
 var methods = [
-    'cost-benefit',
-    'random-order',
-    'random-option'
+    { value: 'cost-benefit', text: 'cost benefit analysis' },
+    { value: 'random-order', text: 'random order of options' },
+    { value: 'random-option', text: 'select a random option' }
 ];
 var optionColorsIndex = 0;
 var optionsIndex = 0;
@@ -37,10 +36,11 @@ function clearOptions() {
     }
     if (optionField) {
         optionField.value = '';
+        optionField.focus();
     }
 }
 ;
-function updateOptions() {
+function renderOptions() {
     var _a;
     var optionsContainer = document.querySelector('.options-container');
     if (optionsContainer) {
@@ -180,13 +180,13 @@ function optionsRandomizeOrder() {
 }
 ;
 function selectOption() {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     if (options.length > 0) {
         var selectedDisplay_1 = document.querySelector('#selected-option-display');
         var selectionMethod_2 = document.querySelector('#selection-method');
         if (selectionMethod_2 && selectedDisplay_1) {
             var methodStr = selectionMethod_2.value;
-            if (methodStr === methods[0]) { // 'cost-benefit'
+            if (methodStr === ((_a = methods[0]) === null || _a === void 0 ? void 0 : _a.value)) { // 'cost-benefit'
                 var error_1 = false;
                 document.querySelectorAll('.cost-input').forEach(function (input, index) {
                     if (input && options[index]) {
@@ -216,7 +216,7 @@ function selectOption() {
                         var maximum = 0;
                         var maxIndex = 0;
                         for (var i in options) {
-                            if (options[i] && ((_a = options[i]) === null || _a === void 0 ? void 0 : _a.benefit) && ((_b = options[i]) === null || _b === void 0 ? void 0 : _b.cost)) {
+                            if (options[i] && ((_b = options[i]) === null || _b === void 0 ? void 0 : _b.benefit) && ((_c = options[i]) === null || _c === void 0 ? void 0 : _c.cost)) {
                                 var costBenefitRatio = options[i].benefit / options[i].cost;
                                 if (costBenefitRatio > maximum) {
                                     maximum = costBenefitRatio;
@@ -224,20 +224,20 @@ function selectOption() {
                                 }
                             }
                         }
-                        selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat((_c = options[maxIndex]) === null || _c === void 0 ? void 0 : _c.option, "</div>");
+                        selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat((_d = options[maxIndex]) === null || _d === void 0 ? void 0 : _d.option, "</div>");
                         selectedDisplay_1.setAttribute('style', "background-color: ".concat(optionColors[maxIndex % optionColors.length]));
                         selectedDisplay_1.classList.add('list-option-style');
                     }
                 }
             }
-            else if (methodStr === methods[methods.length - 2]) { // 'random-order'
+            else if (methodStr === ((_e = methods[methods.length - 2]) === null || _e === void 0 ? void 0 : _e.value)) { // 'random-order'
                 if (optionsRand) {
                     if (optionsIndex === 0) {
                         optionsRandomizeOrder();
                     }
                     var index = optionsRand[optionsIndex];
                     if (index !== undefined) {
-                        var choice_1 = (_d = options[index]) === null || _d === void 0 ? void 0 : _d.option;
+                        var choice_1 = (_f = options[index]) === null || _f === void 0 ? void 0 : _f.option;
                         selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat(choice_1, "</div>");
                         selectedDisplay_1.classList.add('list-option-style');
                         options.forEach(function (option, index) {
@@ -255,9 +255,9 @@ function selectOption() {
                     }
                 }
             }
-            else if (methodStr === methods[methods.length - 1]) { // 'random-option'
+            else if (methodStr === ((_g = methods[methods.length - 1]) === null || _g === void 0 ? void 0 : _g.value)) { // 'random-option'
                 var i = Math.floor(Math.random() * options.length);
-                selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat((_e = options[i]) === null || _e === void 0 ? void 0 : _e.option, "</div>");
+                selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat((_h = options[i]) === null || _h === void 0 ? void 0 : _h.option, "</div>");
                 selectedDisplay_1.setAttribute('style', "background-color: ".concat(optionColors[i % optionColors.length]));
                 selectedDisplay_1.classList.add('list-option-style');
             }
@@ -294,7 +294,7 @@ function removeOption(event) {
                     optionsIndex = 0;
                 }
                 root.remove();
-                updateOptions();
+                renderOptions();
             }
         }
     }
@@ -343,7 +343,7 @@ function optionBackward(event) {
                         if (selectionMethod && selectionMethod.value === 'random-order') {
                             optionsRandomizeOrder();
                         }
-                        updateOptions();
+                        renderOptions();
                         break;
                     }
                 }
@@ -370,7 +370,7 @@ function optionForward(event) {
                         if (selectionMethod && selectionMethod.value === 'random-order') {
                             optionsRandomizeOrder();
                         }
-                        updateOptions();
+                        renderOptions();
                         break;
                     }
                 }
@@ -389,12 +389,13 @@ function addOption() {
         if (optionStr && optionsContainer && selectionMethod) {
             var option = { option: optionStr };
             options.push(option);
-            updateOptions();
+            renderOptions();
         }
+        optionField.focus();
     }
 }
 ;
-function goPage(pageNumber) {
+function renderPage(pageNumber) {
     if (pageNumber === 0) { // choose page
         var main = document.querySelector('main');
         if (main) {
@@ -410,7 +411,13 @@ function goPage(pageNumber) {
             var pageTitle = document.createElement('h2');
             pageTitle.innerText = 'Choose';
             var div1 = document.createElement('div');
-            div1.innerHTML = "<label for=\"selection-method\">Selection Method: </label><select name=\"selection-method\" id=\"selection-method\" class=\"generic-btn-style\"><option value=\"cost-benefit\" selected>cost benefit analysis</option><option value=\"random-order\" >random order of options</option><option value=\"random-option\">get a random option</option></select>";
+            var div1HTML = '<label for="selection-method">Selection Method: </label><select name="selection-method" id="selection-method" class="generic-btn-style">';
+            for (var _i = 0, methods_1 = methods; _i < methods_1.length; _i++) {
+                var obj = methods_1[_i];
+                div1HTML += "<option value=\"".concat(obj === null || obj === void 0 ? void 0 : obj.value, "\">").concat(obj === null || obj === void 0 ? void 0 : obj.text, "</option>");
+            }
+            div1HTML += '</select>';
+            div1.innerHTML = div1HTML;
             var div2 = document.createElement('div');
             div2.innerHTML = "<input id=\"option-field\" class=\"generic-input-style\" type=\"text\" placeholder=\"add option\" autocomplete=\"false\" spellcheck=\"true\" autofocus> <button id=\"add-option-btn\" class=\"generic-btn-style\" type=\"button\">add</button> <button id=\"clear-options-btn\" class=\"generic-btn-style\" type=\"button\">clear</button> <button id=\"select-option-btn\" class=\"generic-btn-style\" type=\"button\">select</button>";
             var section2 = document.createElement('section');
@@ -550,30 +557,24 @@ function goPage(pageNumber) {
     }
 }
 ;
+renderPage(0);
 var navBTNS = document.querySelectorAll('.page-nav');
 if (navBTNS) {
     navBTNS.forEach(function (btn, index) {
-        btn.addEventListener('click', function () { goPage(index); });
+        btn.addEventListener('click', function () { renderPage(index); });
     });
 }
 else {
     console.error('ERROR: nav buttons not found');
 }
-// scan page
 var selectionOptionBtn = document.querySelector('#select-option-btn');
 var addOptionBtn = document.querySelector('#add-option-btn');
 var clearOPtionsBtn = document.querySelector('#clear-options-btn');
 var selectionMethod = document.querySelector('#selection-method');
 var optionField = document.querySelector('#option-field');
-// add listeners
 if (selectionOptionBtn && addOptionBtn && clearOPtionsBtn) {
     selectionOptionBtn.addEventListener('click', selectOption);
-    addOptionBtn.addEventListener('click', function () {
-        if (optionField) {
-            optionField.focus();
-        }
-        addOption();
-    });
+    addOptionBtn.addEventListener('click', addOption);
     clearOPtionsBtn.addEventListener('click', clearOptions);
 }
 else {
@@ -582,14 +583,17 @@ else {
 if (selectionMethod) {
     selectionMethod.addEventListener('change', function () {
         if (selectionMethod.value === 'cost-benefit') {
-            updateOptions();
+            renderOptions();
         }
         else if (selectionMethod.value === 'random-order') {
             optionsRandomizeOrder();
-            updateOptions();
+            renderOptions();
         }
         else if (selectionMethod.value === 'random-option') {
-            updateOptions();
+            renderOptions();
+        }
+        if (optionField) {
+            optionField.focus();
         }
     });
 }
