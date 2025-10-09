@@ -510,7 +510,7 @@ function renderPage(pageNumber) {
             var pageTitle = document.createElement('h2');
             pageTitle.innerText = 'Choose';
             var div1 = document.createElement('div');
-            var div1HTML = '<label for="selection-method">Selection Method: </label><select name="selection-method" id="selection-method" class="generic-btn-style">';
+            var div1HTML = '<label for="selection-method">Selection Method: </label><select name="selection-method" id="selection-method" class="generic-input-style">';
             for (var _i = 0, methods_1 = methods; _i < methods_1.length; _i++) {
                 var obj = methods_1[_i];
                 div1HTML += "<option value=\"".concat(obj === null || obj === void 0 ? void 0 : obj.value, "\">").concat(obj === null || obj === void 0 ? void 0 : obj.text, "</option>");
@@ -566,6 +566,9 @@ function renderPage(pageNumber) {
             else {
                 console.error('ERROR: keyboard compatability degraded');
             }
+            if (optionField_1) {
+                optionField_1.focus();
+            }
         }
         else {
             console.error('ERROR: main node not found');
@@ -604,7 +607,7 @@ function renderPage(pageNumber) {
             var p3 = document.createElement('p');
             p3.innerText = '3.) Depending on your chosen selection method, you can add information about each option.';
             var p4 = document.createElement('p');
-            p4.innerText = '4.) Click the select button to run the selection method on your options and one of the options will be displayed as seleted.';
+            p4.innerText = '4.) Click the select button to run the selection method on your options and the selected option will be displayed.';
             var p5 = document.createElement('p');
             p5.innerText = 'NOTE: You may optionally rearrange the options with the backward and forward arrows available in each option.';
             section1.appendChild(pageTitle);
@@ -612,6 +615,7 @@ function renderPage(pageNumber) {
             section1.appendChild(p2);
             section1.appendChild(p3);
             section1.appendChild(p4);
+            section1.appendChild(p5);
             main.appendChild(section1);
         }
         else {
@@ -645,9 +649,21 @@ function renderPage(pageNumber) {
             var pageTitle = document.createElement('h2');
             pageTitle.innerText = 'About';
             var p1 = document.createElement('p');
-            p1.innerText = 'Choosy is a simple website for random option selection. Need to choose? Choose Choosy!';
+            p1.innerText = 'Choosy is a simple website for option selection. Need to choose? Choose Choosy!';
+            var p2Title = document.createElement('h3');
+            p2Title.innerText = 'UI/UX';
+            var p2 = document.createElement('p');
+            p2.innerText = 'Choosy has an exceptionally robust and simply stylish interface that adapts to a wide range of viewports with ease and clarity. Its red lined navigation bar and yellow backdrop boldly distinguish it as being equal parts intense and playful. Colors are carefully fine-tuned to maximize text contrast and fit the overachring theme and shape corners are broken just enough to focus on the content contained therein. An elegant layout scheme accomodates both a center and left content justification by keeping things simple and intuitively organized.';
+            var p3Title = document.createElement('h3');
+            p3Title.innerText = 'Website Architecture';
+            var p3 = document.createElement('p');
+            p3.innerText = 'The Choosy website architecture is broadly broken into two fundamental directories: 1) source code and 2) build code. The separation of source code from build code permits the conveniences of development dependecies such as Typescript--for script type safety--and Sass--for manageable stylesheets--which improve the developement process without the performance and compatability downsides of deploying code with excessive dependencies. As such, Choosy is a more scalable project than it would be otherwise, despite its simplicity not requiring scalability at this stage of its development life cycle.';
             section1.appendChild(pageTitle);
             section1.appendChild(p1);
+            section1.appendChild(p2Title);
+            section1.appendChild(p2);
+            section1.appendChild(p3Title);
+            section1.appendChild(p3);
             main.appendChild(section1);
         }
         else {
