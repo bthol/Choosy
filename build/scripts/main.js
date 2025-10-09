@@ -2,7 +2,8 @@
 ;
 var optionColors = ['hsla(0, 98%, 72%, 1.00)', 'hsla(100, 98%, 42%, 1.00)', 'hsla(240, 98%, 77%, 1.00)'];
 var methods = [
-    { value: 'cost-benefit', text: 'cost benefit analysis' },
+    { value: 'benefit-cost-ratio', text: 'highest benefit cost ratio' },
+    { value: 'net-benefit', text: 'highest net benefit' },
     { value: 'random-order', text: 'random order of options' },
     { value: 'random-option', text: 'select a random option' }
 ];
@@ -41,7 +42,7 @@ function clearOptions() {
 }
 ;
 function renderOptions() {
-    var _a;
+    var _a, _b, _c;
     var optionsContainer = document.querySelector('.options-container');
     if (optionsContainer) {
         // clean up listeners
@@ -106,7 +107,21 @@ function renderOptions() {
             optionElement.appendChild(forwardBTN);
             // add conditional formatting
             if (selectionMethod_1 !== null) {
-                if (selectionMethod_1.value === 'cost-benefit') {
+                if (selectionMethod_1.value === ((_b = methods[0]) === null || _b === void 0 ? void 0 : _b.value)) {
+                    // add cost input
+                    var costInput = document.createElement('input');
+                    costInput.setAttribute('type', 'text');
+                    costInput.setAttribute('placeholder', 'cost');
+                    costInput.setAttribute('class', 'cost-input cost-input-style generic-input-style');
+                    optionElement.appendChild(costInput);
+                    // add benefit input
+                    var benefitInput = document.createElement('input');
+                    benefitInput.setAttribute('type', 'text');
+                    benefitInput.setAttribute('placeholder', 'benefit');
+                    benefitInput.setAttribute('class', 'benefit-input benefit-input-style generic-input-style');
+                    optionElement.appendChild(benefitInput);
+                }
+                else if (selectionMethod_1.value === ((_c = methods[1]) === null || _c === void 0 ? void 0 : _c.value)) {
                     // add cost input
                     var costInput = document.createElement('input');
                     costInput.setAttribute('type', 'text');
@@ -180,13 +195,13 @@ function optionsRandomizeOrder() {
 }
 ;
 function selectOption() {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
     if (options.length > 0) {
         var selectedDisplay_1 = document.querySelector('#selected-option-display');
         var selectionMethod_2 = document.querySelector('#selection-method');
         if (selectionMethod_2 && selectedDisplay_1) {
             var methodStr = selectionMethod_2.value;
-            if (methodStr === ((_a = methods[0]) === null || _a === void 0 ? void 0 : _a.value)) { // 'cost-benefit'
+            if (methodStr === ((_a = methods[0]) === null || _a === void 0 ? void 0 : _a.value)) { // benefit cost ratio
                 var error_1 = false;
                 document.querySelectorAll('.cost-input').forEach(function (input, index) {
                     if (input && options[index]) {
@@ -217,9 +232,9 @@ function selectOption() {
                         var maxIndex = 0;
                         for (var i in options) {
                             if (options[i] && ((_b = options[i]) === null || _b === void 0 ? void 0 : _b.benefit) && ((_c = options[i]) === null || _c === void 0 ? void 0 : _c.cost)) {
-                                var costBenefitRatio = options[i].benefit / options[i].cost;
-                                if (costBenefitRatio > maximum) {
-                                    maximum = costBenefitRatio;
+                                var benefitCostRatio = options[i].benefit / options[i].cost;
+                                if (benefitCostRatio > maximum) {
+                                    maximum = benefitCostRatio;
                                     maxIndex = Number(i);
                                 }
                             }
@@ -230,14 +245,58 @@ function selectOption() {
                     }
                 }
             }
-            else if (methodStr === ((_e = methods[methods.length - 2]) === null || _e === void 0 ? void 0 : _e.value)) { // 'random-order'
+            else if (methodStr === ((_e = methods[1]) === null || _e === void 0 ? void 0 : _e.value)) { // net benefit
+                var error_2 = false;
+                document.querySelectorAll('.cost-input').forEach(function (input, index) {
+                    if (input && options[index]) {
+                        var inputElement = input;
+                        console.log(inputElement.value);
+                        if (inputElement.value !== '') {
+                            options[index].cost = Number(inputElement.value);
+                        }
+                        else {
+                            error_2 = true;
+                        }
+                    }
+                });
+                if (!error_2) {
+                    document.querySelectorAll('.benefit-input').forEach(function (input, index) {
+                        if (input && options[index]) {
+                            var inputElement = input;
+                            if (inputElement.value !== '') {
+                                options[index].benefit = Number(inputElement.value);
+                            }
+                            else {
+                                error_2 = true;
+                            }
+                        }
+                    });
+                    if (!error_2) {
+                        var maximum = 0;
+                        var maxIndex = 0;
+                        for (var i in options) {
+                            if (options[i] && ((_f = options[i]) === null || _f === void 0 ? void 0 : _f.benefit) && ((_g = options[i]) === null || _g === void 0 ? void 0 : _g.cost)) {
+                                var netBenefit = options[i].benefit - options[i].cost;
+                                if (netBenefit > maximum) {
+                                    maximum = netBenefit;
+                                    maxIndex = Number(i);
+                                }
+                            }
+                        }
+                        selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat((_h = options[maxIndex]) === null || _h === void 0 ? void 0 : _h.option, "</div>");
+                        selectedDisplay_1.setAttribute('style', "background-color: ".concat(optionColors[maxIndex % optionColors.length]));
+                        selectedDisplay_1.classList.add('list-option-style');
+                    }
+                }
+            }
+            else if (methodStr === ((_j = methods[methods.length - 2]) === null || _j === void 0 ? void 0 : _j.value)) { // 'random-order'
                 if (optionsRand) {
                     if (optionsIndex === 0) {
                         optionsRandomizeOrder();
                     }
                     var index = optionsRand[optionsIndex];
                     if (index !== undefined) {
-                        var choice_1 = (_f = options[index]) === null || _f === void 0 ? void 0 : _f.option;
+                        var choice_1 = (_k = options[index]) === null || _k === void 0 ? void 0 : _k.option;
                         selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat(choice_1, "</div>");
                         selectedDisplay_1.classList.add('list-option-style');
                         options.forEach(function (option, index) {
@@ -255,9 +314,9 @@ function selectOption() {
                     }
                 }
             }
-            else if (methodStr === ((_g = methods[methods.length - 1]) === null || _g === void 0 ? void 0 : _g.value)) { // 'random-option'
+            else if (methodStr === ((_l = methods[methods.length - 1]) === null || _l === void 0 ? void 0 : _l.value)) { // 'random-option'
                 var i = Math.floor(Math.random() * options.length);
-                selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat((_h = options[i]) === null || _h === void 0 ? void 0 : _h.option, "</div>");
+                selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat((_m = options[i]) === null || _m === void 0 ? void 0 : _m.option, "</div>");
                 selectedDisplay_1.setAttribute('style', "background-color: ".concat(optionColors[i % optionColors.length]));
                 selectedDisplay_1.classList.add('list-option-style');
             }
@@ -582,16 +641,11 @@ else {
 }
 if (selectionMethod) {
     selectionMethod.addEventListener('change', function () {
-        if (selectionMethod.value === 'cost-benefit') {
-            renderOptions();
-        }
-        else if (selectionMethod.value === 'random-order') {
+        var _a;
+        if (selectionMethod.value === ((_a = methods[methods.length - 2]) === null || _a === void 0 ? void 0 : _a.value)) {
             optionsRandomizeOrder();
-            renderOptions();
         }
-        else if (selectionMethod.value === 'random-option') {
-            renderOptions();
-        }
+        renderOptions();
         if (optionField) {
             optionField.focus();
         }

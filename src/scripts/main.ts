@@ -5,7 +5,8 @@ interface optionInterface {
 };
 const optionColors: string[] = ['hsla(0, 98%, 72%, 1.00)', 'hsla(100, 98%, 42%, 1.00)', 'hsla(240, 98%, 77%, 1.00)'];
 const methods: {value: string, text: string}[] = [
-    {value: 'cost-benefit', text: 'cost benefit analysis'},
+    {value: 'benefit-cost-ratio', text: 'highest benefit cost ratio'},
+    {value: 'net-benefit', text: 'highest net benefit'},
     {value: 'random-order', text: 'random order of options'},
     {value: 'random-option', text: 'select a random option'}
 ];
@@ -106,7 +107,20 @@ function renderOptions(): void {
             optionElement.appendChild(forwardBTN);
             // add conditional formatting
             if (selectionMethod !== null) {
-                if (selectionMethod.value === 'cost-benefit') {
+                if (selectionMethod.value === methods[0]?.value) {
+                    // add cost input
+                    const costInput = document.createElement('input');
+                    costInput.setAttribute('type', 'text');
+                    costInput.setAttribute('placeholder', 'cost');
+                    costInput.setAttribute('class', 'cost-input cost-input-style generic-input-style');
+                    optionElement.appendChild(costInput);
+                    // add benefit input
+                    const benefitInput = document.createElement('input');
+                    benefitInput.setAttribute('type', 'text');
+                    benefitInput.setAttribute('placeholder', 'benefit');
+                    benefitInput.setAttribute('class', 'benefit-input benefit-input-style generic-input-style');
+                    optionElement.appendChild(benefitInput);
+                } else if (selectionMethod.value === methods[1]?.value) {
                     // add cost input
                     const costInput = document.createElement('input');
                     costInput.setAttribute('type', 'text');
@@ -179,7 +193,7 @@ function selectOption(): void {
         const selectionMethod: HTMLSelectElement | null = document.querySelector('#selection-method');
         if (selectionMethod && selectedDisplay) {
             const methodStr: string = selectionMethod.value;
-            if (methodStr === methods[0]?.value) { // 'cost-benefit'
+            if (methodStr === methods[0]?.value) { // benefit cost ratio
                 let error: boolean = false;
                 document.querySelectorAll('.cost-input').forEach((input, index) => {
                     if (input && options[index]) {
@@ -208,9 +222,50 @@ function selectOption(): void {
                         let maxIndex: number = 0;
                         for (const i in options) {
                             if (options[i] && options[i]?.benefit && options[i]?.cost) {
-                                const costBenefitRatio: number = options[i].benefit / options[i].cost;
-                                if (costBenefitRatio > maximum) {
-                                    maximum = costBenefitRatio;
+                                const benefitCostRatio: number = options[i].benefit / options[i].cost;
+                                if (benefitCostRatio > maximum) {
+                                    maximum = benefitCostRatio;
+                                    maxIndex = Number(i);
+                                }
+                            }
+                        }
+                        selectedDisplay.innerHTML = `<div class="option-text-element">${options[maxIndex]?.option}</div>`;
+                        selectedDisplay.setAttribute('style', `background-color: ${optionColors[maxIndex % optionColors.length]}`);
+                        selectedDisplay.classList.add('list-option-style');
+                    }
+                }
+            } else if (methodStr === methods[1]?.value) { // net benefit
+                let error: boolean = false;
+                document.querySelectorAll('.cost-input').forEach((input, index) => {
+                    if (input && options[index]) {
+                        const inputElement: HTMLInputElement = input as HTMLInputElement;
+                        console.log(inputElement.value);
+                        if (inputElement.value !== '') {
+                            options[index].cost = Number(inputElement.value);
+                        } else {
+                            error = true;
+                        }
+                    }
+                });
+                if (!error) {
+                    document.querySelectorAll('.benefit-input').forEach((input, index) => {
+                        if (input && options[index]) {
+                            const inputElement: HTMLInputElement = input as HTMLInputElement;
+                            if (inputElement.value !== '') {
+                                options[index].benefit = Number(inputElement.value);
+                            } else {
+                                error = true;
+                            }
+                        }
+                    });
+                    if (!error) {
+                        let maximum: number = 0;
+                        let maxIndex: number = 0;
+                        for (const i in options) {
+                            if (options[i] && options[i]?.benefit && options[i]?.cost) {
+                                const netBenefit: number = options[i].benefit - options[i].cost;
+                                if (netBenefit > maximum) {
+                                    maximum = netBenefit;
                                     maxIndex = Number(i);
                                 }
                             }
@@ -538,7 +593,7 @@ if (navBTNS) {
 const selectionOptionBtn: Element | null = document.querySelector('#select-option-btn');
 const addOptionBtn: Element | null = document.querySelector('#add-option-btn');
 const clearOPtionsBtn: Element | null = document.querySelector('#clear-options-btn');
-const selectionMethod: HTMLSelectElement  | null = document.querySelector('#selection-method');
+const selectionMethod: HTMLSelectElement | null = document.querySelector('#selection-method');
 const optionField: HTMLInputElement | null = document.querySelector('#option-field');
 if (selectionOptionBtn && addOptionBtn && clearOPtionsBtn) {
     selectionOptionBtn.addEventListener('click', selectOption);
@@ -549,14 +604,10 @@ if (selectionOptionBtn && addOptionBtn && clearOPtionsBtn) {
 }
 if (selectionMethod) {
     selectionMethod.addEventListener('change', () => {
-        if (selectionMethod.value === 'cost-benefit') {
-            renderOptions();
-        } else if (selectionMethod.value === 'random-order') {
+        if (selectionMethod.value === methods[methods.length - 2]?.value) {
             optionsRandomizeOrder();
-            renderOptions();
-        } else if (selectionMethod.value === 'random-option') {
-            renderOptions();
         }
+        renderOptions();
         if (optionField) {
             optionField.focus();
         }
