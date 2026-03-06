@@ -501,6 +501,9 @@ function renderPage(pageNumber) {
             // clear data
             options = [];
             optionsRand = [];
+            // restore default indices
+            optionsIndex = 0;
+            optionColorsIndex = 0;
             // clear page
             main.innerHTML = '';
             // build page
@@ -510,7 +513,7 @@ function renderPage(pageNumber) {
             var pageTitle = document.createElement('h2');
             pageTitle.innerText = 'Choose';
             var div1 = document.createElement('div');
-            var div1HTML = '<label for="selection-method">Selection Method: </label><select name="selection-method" id="selection-method" class="generic-input-style">';
+            var div1HTML = '<label for="selection-method">Selection Method: </label> <div> <select name="selection-method" id="selection-method" class="generic-input-style"> </div>';
             for (var _i = 0, methods_1 = methods; _i < methods_1.length; _i++) {
                 var obj = methods_1[_i];
                 div1HTML += "<option value=\"".concat(obj === null || obj === void 0 ? void 0 : obj.value, "\">").concat(obj === null || obj === void 0 ? void 0 : obj.text, "</option>");
@@ -518,7 +521,7 @@ function renderPage(pageNumber) {
             div1HTML += '</select>';
             div1.innerHTML = div1HTML;
             var div2 = document.createElement('div');
-            div2.innerHTML = "<input id=\"option-field\" class=\"generic-input-style\" type=\"text\" placeholder=\"add option\" autocomplete=\"false\" spellcheck=\"true\" autofocus> <button id=\"add-option-btn\" class=\"generic-btn-style\" type=\"button\">add</button> <button id=\"clear-options-btn\" class=\"generic-btn-style\" type=\"button\">clear</button> <button id=\"select-option-btn\" class=\"generic-btn-style\" type=\"button\">select</button>";
+            div2.innerHTML = "<input id=\"option-field\" class=\"generic-input-style\" type=\"text\" placeholder=\"add option\" autocomplete=\"false\" spellcheck=\"true\" autofocus> <div> <button id=\"add-option-btn\" class=\"generic-btn-style\" type=\"button\">add</button> <button id=\"clear-options-btn\" class=\"generic-btn-style\" type=\"button\">clear</button> <button id=\"select-option-btn\" class=\"generic-btn-style\" type=\"button\">select</button> </div>";
             var section2 = document.createElement('section');
             section2.setAttribute('id', 'user-data');
             section2.setAttribute('class', 'section-separate-style section-margins');
@@ -550,8 +553,16 @@ function renderPage(pageNumber) {
             }
             if (selectionMethod_3) {
                 selectionMethod_3.addEventListener('change', function () {
+                    var _a;
                     if (selectionMethod_3.value === 'random-order') {
                         optionsRandomizeOrder();
+                    }
+                    if (selectionMethod_3.value === ((_a = methods[methods.length - 2]) === null || _a === void 0 ? void 0 : _a.value)) {
+                        optionsRandomizeOrder();
+                    }
+                    renderOptions();
+                    if (optionField_1) {
+                        optionField_1.focus();
                     }
                 });
             }
@@ -593,6 +604,9 @@ function renderPage(pageNumber) {
             // clear data
             options = [];
             optionsRand = [];
+            // restore default indices
+            optionsIndex = 0;
+            optionColorsIndex = 0;
             // clear page
             main.innerHTML = '';
             // build page
@@ -601,15 +615,17 @@ function renderPage(pageNumber) {
             var pageTitle = document.createElement('h2');
             pageTitle.innerText = 'Manual';
             var p1 = document.createElement('p');
-            p1.innerText = '1.) Choose the selection method you want using the drop down menu.';
+            // <p><b>1.)</b></p>
+            // <p><b>1.)</b></p>
+            p1.innerHTML = '<b>1.)</b> Choose the selection method you want using the drop down menu.';
             var p2 = document.createElement('p');
-            p2.innerText = '2.) Enter each option name into the options field and hit enter or click the add button.';
+            p2.innerHTML = '<b>2.)</b>Enter each option name into the options field and hit enter or click the add button';
             var p3 = document.createElement('p');
-            p3.innerText = '3.) Depending on your chosen selection method, you can add information about each option.';
+            p3.innerHTML = '<b>3.)</b> Depending on your chosen selection method, you can add information about each option.';
             var p4 = document.createElement('p');
-            p4.innerText = '4.) Click the select button to run the selection method on your options and the selected option will be displayed.';
+            p4.innerHTML = '<b>4.)</b> Click the select button to run the selection method on your options and the selected option will be displayed.';
             var p5 = document.createElement('p');
-            p5.innerText = 'NOTE: You may optionally rearrange the options with the backward and forward arrows available in each option.';
+            p5.innerHTML = '<b>NOTE:</b> You may optionally rearrange the options with the backward and forward arrows available in each option.';
             section1.appendChild(pageTitle);
             section1.appendChild(p1);
             section1.appendChild(p2);
@@ -641,6 +657,9 @@ function renderPage(pageNumber) {
             // clear data
             options = [];
             optionsRand = [];
+            // restore default indices
+            optionsIndex = 0;
+            optionColorsIndex = 0;
             // clear page
             main.innerHTML = '';
             // build page
@@ -694,18 +713,6 @@ if (selectionOptionBtn && addOptionBtn && clearOPtionsBtn) {
 }
 else {
     console.error('ERROR: Button(s) not found');
-}
-if (selectionMethod) {
-    selectionMethod.addEventListener('change', function () {
-        var _a;
-        if (selectionMethod.value === ((_a = methods[methods.length - 2]) === null || _a === void 0 ? void 0 : _a.value)) {
-            optionsRandomizeOrder();
-        }
-        renderOptions();
-        if (optionField) {
-            optionField.focus();
-        }
-    });
 }
 if (optionField) {
     optionField.focus();

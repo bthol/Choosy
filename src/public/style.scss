@@ -43,7 +43,7 @@ header {
 	align-self: center;
 	padding: 0rem 1rem;
 	margin: 5px;
-	font-size: 3.1rem;
+	font-size: 50px; // 3.1rem
 	font-weight: 600;
 	letter-spacing: .1rem;
 	font-family: index.$title-font-family;
@@ -149,11 +149,13 @@ footer {
 	@include index.button-generic(var(--border-color), var(--background-color-3));
 	@include index.round-corners;
 	color: var(--text-color-1);
+	padding: 5px;
 }
 
 .generic-input-style {
 	@include index.button-generic(var(--border-color), var(--background-color-3));
 	@include index.break-corners;
+	padding: 5px;
 }
 
 .remove-option-btn-style {
@@ -196,7 +198,31 @@ footer {
 	}
 }
 
-@media (max-width: 324px) {
+@media (max-width: 795px) {
+	.list-option-style {
+		grid-template-rows: 1fr 2fr 1fr 1fr 1fr;
+	}
+	.cost-input-style {
+		grid-row: 3;
+		grid-column: 1 / span 8;
+		margin: 1px;
+	}
+	.benefit-input-style {
+		grid-row: 4;
+		grid-column: 1 / span 8;
+		margin: 1px;
+	}
+	.option-backward-btn-style {
+		grid-row: 5;
+		grid-column: 1 / span 4;
+	}
+	.option-forward-btn-style {
+		grid-row: 5;
+		grid-column: 5 / span 8;
+	}
+}
+
+@media (max-width: 418.75px) { // 324px, 449px
 	.selected-option-display-container {
 		grid-template-columns: 1fr;
 		margin: 0px;
@@ -206,6 +232,12 @@ footer {
 	}
 	.options-container {
 		grid-template-columns: 1fr;
+	}
+	.option-backward-btn>i {
+		transform: rotate(90deg);
+	}
+	.option-forward-btn>i {
+		transform: rotate(90deg);
 	}
 }
 

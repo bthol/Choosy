@@ -471,6 +471,9 @@ function renderPage(pageNumber: Number) {
             // clear data
             options = [];
             optionsRand = [];
+            // restore default indices
+            optionsIndex = 0;
+            optionColorsIndex = 0;
             // clear page
             main.innerHTML = '';
             // build page
@@ -480,14 +483,14 @@ function renderPage(pageNumber: Number) {
             const pageTitle: HTMLElement = document.createElement('h2');
             pageTitle.innerText = 'Choose';
             const div1: HTMLElement = document.createElement('div');
-            let div1HTML: string = '<label for="selection-method">Selection Method: </label><select name="selection-method" id="selection-method" class="generic-input-style">';
+            let div1HTML: string = '<label for="selection-method">Selection Method: </label> <div> <select name="selection-method" id="selection-method" class="generic-input-style"> </div>';
             for (const obj of methods) {
                 div1HTML += `<option value="${obj?.value}">${obj?.text}</option>`;
             }
             div1HTML += '</select>';
             div1.innerHTML = div1HTML;
             const div2: HTMLElement = document.createElement('div');
-            div2.innerHTML = `<input id="option-field" class="generic-input-style" type="text" placeholder="add option" autocomplete="false" spellcheck="true" autofocus> <button id="add-option-btn" class="generic-btn-style" type="button">add</button> <button id="clear-options-btn" class="generic-btn-style" type="button">clear</button> <button id="select-option-btn" class="generic-btn-style" type="button">select</button>`;
+            div2.innerHTML = `<input id="option-field" class="generic-input-style" type="text" placeholder="add option" autocomplete="false" spellcheck="true" autofocus> <div> <button id="add-option-btn" class="generic-btn-style" type="button">add</button> <button id="clear-options-btn" class="generic-btn-style" type="button">clear</button> <button id="select-option-btn" class="generic-btn-style" type="button">select</button> </div>`;
             const section2: HTMLElement = document.createElement('section');
             section2.setAttribute('id', 'user-data');
             section2.setAttribute('class', 'section-separate-style section-margins');
@@ -520,6 +523,13 @@ function renderPage(pageNumber: Number) {
                 selectionMethod.addEventListener('change', () => {
                     if (selectionMethod.value === 'random-order') {
                         optionsRandomizeOrder();
+                    }
+                    if (selectionMethod.value === methods[methods.length - 2]?.value) {
+                        optionsRandomizeOrder();
+                    }
+                    renderOptions();
+                    if (optionField) {
+                        optionField.focus();
                     }
                 });
             }
@@ -559,6 +569,9 @@ function renderPage(pageNumber: Number) {
             // clear data
             options = [];
             optionsRand = [];
+            // restore default indices
+            optionsIndex = 0;
+            optionColorsIndex = 0;
             // clear page
             main.innerHTML = '';
             // build page
@@ -567,15 +580,17 @@ function renderPage(pageNumber: Number) {
             const pageTitle: HTMLElement = document.createElement('h2');
             pageTitle.innerText = 'Manual';
             const p1: HTMLElement = document.createElement('p');
-            p1.innerText = '1.) Choose the selection method you want using the drop down menu.';
+            // <p><b>1.)</b></p>
+            // <p><b>1.)</b></p>
+            p1.innerHTML = '<b>1.)</b> Choose the selection method you want using the drop down menu.';
             const p2: HTMLElement = document.createElement('p');
-            p2.innerText = '2.) Enter each option name into the options field and hit enter or click the add button.';
+            p2.innerHTML = '<b>2.)</b>Enter each option name into the options field and hit enter or click the add button';
             const p3: HTMLElement = document.createElement('p');
-            p3.innerText = '3.) Depending on your chosen selection method, you can add information about each option.';
+            p3.innerHTML = '<b>3.)</b> Depending on your chosen selection method, you can add information about each option.';
             const p4: HTMLElement = document.createElement('p');
-            p4.innerText = '4.) Click the select button to run the selection method on your options and the selected option will be displayed.';
+            p4.innerHTML = '<b>4.)</b> Click the select button to run the selection method on your options and the selected option will be displayed.';
             const p5: HTMLElement = document.createElement('p');
-            p5.innerText = 'NOTE: You may optionally rearrange the options with the backward and forward arrows available in each option.';
+            p5.innerHTML = '<b>NOTE:</b> You may optionally rearrange the options with the backward and forward arrows available in each option.';
             section1.appendChild(pageTitle);
             section1.appendChild(p1);
             section1.appendChild(p2);
@@ -605,6 +620,9 @@ function renderPage(pageNumber: Number) {
             // clear data
             options = [];
             optionsRand = [];
+            // restore default indices
+            optionsIndex = 0;
+            optionColorsIndex = 0;
             // clear page
             main.innerHTML = '';
             // build page
@@ -654,17 +672,6 @@ if (selectionOptionBtn && addOptionBtn && clearOPtionsBtn) {
     clearOPtionsBtn.addEventListener('click', clearOptions);
 } else {
     console.error('ERROR: Button(s) not found');
-}
-if (selectionMethod) {
-    selectionMethod.addEventListener('change', () => {
-        if (selectionMethod.value === methods[methods.length - 2]?.value) {
-            optionsRandomizeOrder();
-        }
-        renderOptions();
-        if (optionField) {
-            optionField.focus();
-        }
-    });
 }
 if (optionField) {
     optionField.focus();
