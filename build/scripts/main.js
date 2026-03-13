@@ -508,31 +508,32 @@ function renderPage(pageNumber) {
             main.innerHTML = '';
             // build page
             var section1 = document.createElement('section');
-            section1.setAttribute('id', 'user-data');
             section1.setAttribute('class', 'section-separate-style section-margins');
             var pageTitle = document.createElement('h2');
             pageTitle.innerText = 'Choose';
             var div1 = document.createElement('div');
-            var div1HTML = '<label for="selection-method">Selection Method: </label> <div> <select name="selection-method" id="selection-method" class="generic-input-style"> </div>';
+            div1.setAttribute('class', 'row-space');
+            var div1HTML = '<label for="selection-method">Selection Method: </label> <div> <select name="selection-method" id="selection-method" class="generic-input-style">';
             for (var _i = 0, methods_1 = methods; _i < methods_1.length; _i++) {
                 var obj = methods_1[_i];
                 div1HTML += "<option value=\"".concat(obj === null || obj === void 0 ? void 0 : obj.value, "\">").concat(obj === null || obj === void 0 ? void 0 : obj.text, "</option>");
             }
-            div1HTML += '</select>';
+            div1HTML += '</select></div>';
             div1.innerHTML = div1HTML;
             var div2 = document.createElement('div');
-            div2.innerHTML = "<input id=\"option-field\" class=\"generic-input-style\" type=\"text\" placeholder=\"add option\" autocomplete=\"false\" spellcheck=\"true\" autofocus> <div> <button id=\"add-option-btn\" class=\"generic-btn-style\" type=\"button\">add</button> <button id=\"clear-options-btn\" class=\"generic-btn-style\" type=\"button\">clear</button> <button id=\"select-option-btn\" class=\"generic-btn-style\" type=\"button\">select</button> </div>";
+            div2.innerHTML = "<input id=\"option-field\" class=\"generic-input-style\" type=\"text\" placeholder=\"add option\" autocomplete=\"false\" spellcheck=\"true\" autofocus>";
+            var div3 = document.createElement('div');
+            div3.setAttribute('class', 'row-space');
+            div3.innerHTML = '<button id="add-option-btn" class="generic-btn-style" type="button">add</button> <button id="clear-options-btn" class="generic-btn-style" type="button">clear</button> <button id="select-option-btn" class="generic-btn-style" type="button">select</button>';
             var section2 = document.createElement('section');
             section2.setAttribute('id', 'user-data');
             section2.setAttribute('class', 'section-separate-style section-margins');
-            var div3 = document.createElement('div');
-            div3.innerHTML = "<div class=\"selected-option-display-container\"><div id=\"selected-option-display\"></div></div>";
             var div4 = document.createElement('div');
             div4.setAttribute('class', 'options-container');
             section1.appendChild(pageTitle);
             section1.appendChild(div1);
             section1.appendChild(div2);
-            section2.appendChild(div3);
+            section1.appendChild(div3);
             section2.appendChild(div4);
             main.appendChild(section1);
             main.appendChild(section2);
@@ -619,7 +620,7 @@ function renderPage(pageNumber) {
             // <p><b>1.)</b></p>
             p1.innerHTML = '<b>1.)</b> Choose the selection method you want using the drop down menu.';
             var p2 = document.createElement('p');
-            p2.innerHTML = '<b>2.)</b>Enter each option name into the options field and hit enter or click the add button';
+            p2.innerHTML = '<b>2.)</b> Enter each option name into the options field and hit enter or click the add button';
             var p3 = document.createElement('p');
             p3.innerHTML = '<b>3.)</b> Depending on your chosen selection method, you can add information about each option.';
             var p4 = document.createElement('p');

@@ -76,15 +76,16 @@ main {
 	width: 800px;
 }
 
+.row-space {
+	margin: 10px 0px;
+}
+
 .section-separate-style {
 	border-bottom: 2px solid var(--border-color);
 }
 
 .section-margins {
-	margin-top: 16px;
-	> div {
-		margin: 16px 0px;
-	}
+	margin: 16px 0px;
 }
 
 footer {
@@ -123,6 +124,9 @@ footer {
 	padding: 14px 0px;
 	grid-column: 1 / span 8;
 	grid-row: 2;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .cost-input-style {
@@ -189,6 +193,10 @@ footer {
 	>.option-text-element {
 		grid-row: 1 / span 3;
 	}
+}
+
+#user-data {
+	padding-bottom: 16px;
 }
 
 @media (max-width: 800px) {
