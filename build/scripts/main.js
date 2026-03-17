@@ -529,12 +529,18 @@ function renderPage(pageNumber) {
             section2.setAttribute('id', 'user-data');
             section2.setAttribute('class', 'section-separate-style section-margins');
             var div4 = document.createElement('div');
-            div4.setAttribute('class', 'options-container');
+            div4.setAttribute('class', 'selected-option-display-container');
+            var div5 = document.createElement('div');
+            div5.setAttribute('id', 'selected-option-display');
+            var div6 = document.createElement('div');
+            div6.setAttribute('class', 'options-container');
             section1.appendChild(pageTitle);
             section1.appendChild(div1);
             section1.appendChild(div2);
             section1.appendChild(div3);
+            div4.appendChild(div5);
             section2.appendChild(div4);
+            section2.appendChild(div6);
             main.appendChild(section1);
             main.appendChild(section2);
             // scan page

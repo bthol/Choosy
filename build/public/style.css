@@ -258,11 +258,15 @@ footer > small {
     grid-row: 5;
     grid-column: 5/span 8;
   }
+  #selected-option-display > .option-text-element {
+    grid-column: 1/span 8;
+    grid-row: 1/span 6;
+  }
 }
 @media (max-width: 418.75px) {
   .selected-option-display-container {
     grid-template-columns: 1fr;
-    margin: 0px;
+    margin: 0px 0px 10px 0px;
   }
   #selected-option-display {
     grid-column: 1;
