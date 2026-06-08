@@ -14,6 +14,7 @@ let optionColorsIndex: number = 0;
 let optionsIndex: number = 0;
 let options: optionInterface[] = [];
 let optionsRand: number[] = [];
+let controller: AbortController = new AbortController();
 function validCostBenefitInput(event: Event) {
     const target: HTMLInputElement = event.target as HTMLInputElement;
     if (target) {
@@ -71,21 +72,9 @@ function renderOptions(): void {
     const optionsContainer: HTMLElement | null = document.querySelector('.options-container');
     if (optionsContainer) {
         // clean up listeners
-        document.querySelectorAll('.remove-option-btn').forEach((btn) => {
-            btn.removeEventListener('click', removeOption);
-        });
-        document.querySelectorAll('.option-backward-btn').forEach((btn) => {
-            btn.removeEventListener('click', optionBackward);
-        });
-        document.querySelectorAll('.option-forward-btn').forEach((btn) => {
-            btn.removeEventListener('click', optionForward);
-        });
-        document.querySelectorAll('.cost-input').forEach((input) => {
-            input.removeEventListener('input', validCostBenefitInput);
-        });
-        document.querySelectorAll('.benefit-input').forEach((input) => {
-            input.removeEventListener('input', validCostBenefitInput);
-        });
+        controller.abort();
+        // set new abort controller
+        controller = new AbortController();
         // get user data for conditional option formatting
         const selectionMethod: HTMLSelectElement | null = document.querySelector('#selection-method');
         // init color index + clear old option elements
@@ -183,19 +172,19 @@ function renderOptions(): void {
         }
         // add new listeners
         document.querySelectorAll('.remove-option-btn').forEach((btn) => {
-            btn.addEventListener('click', removeOption, {once: true});
+            btn.addEventListener('click', removeOption, {once: true, signal: controller.signal});
         });
         document.querySelectorAll('.option-backward-btn').forEach((btn) => {
-            btn.addEventListener('click', optionBackward);
+            btn.addEventListener('click', optionBackward, {signal: controller.signal});
         });
         document.querySelectorAll('.option-forward-btn').forEach((btn) => {
-            btn.addEventListener('click', optionForward);
+            btn.addEventListener('click', optionForward, {signal: controller.signal});
         });
         document.querySelectorAll('.cost-input').forEach((input) => {
-            input.addEventListener('input', validCostBenefitInput);
+            input.addEventListener('input', validCostBenefitInput, {signal: controller.signal});
         });
         document.querySelectorAll('.benefit-input').forEach((input) => {
-            input.addEventListener('input', validCostBenefitInput);
+            input.addEventListener('input', validCostBenefitInput, {signal: controller.signal});
         });
     } else {
         console.error('ERROR: options not updated');
@@ -279,7 +268,6 @@ function selectOption(): void {
                 document.querySelectorAll('.cost-input').forEach((input, index) => {
                     if (input && options[index]) {
                         const inputElement: HTMLInputElement = input as HTMLInputElement;
-                        console.log(inputElement.value);
                         if (inputElement.value !== '') {
                             options[index].cost = Number(inputElement.value);
                         } else {
@@ -339,7 +327,7 @@ function selectOption(): void {
                             optionsRandomizeOrder();
                             let first: number | undefined = optionsRand[0];
                             let count = 0; // limit number of attempts to prevent double option
-                            while (count < 100 && first && last && first === last) {
+                            while (count < 1000 && first && last && first === last) {
                                 // randomize until there is no double option
                                 optionsRandomizeOrder();
                                 first = optionsRand[0];
@@ -371,22 +359,43 @@ function removeOption(event: Event): void {
             if (div) {
                 const content: string = div.textContent;
                 // remove options
+                let opIdx: number = 0; // index of element removed from options
                 for (let i = 0; i < options.length; i++) {
                     if (options[i]?.option === content) {
                         options.splice(i, 1);
+                        opIdx = i;
                         break;
                     }
                 }
-                // remove from optionsRand
-                for (let i = 0; i < optionsRand.length; i++) {
-                    const index: number | undefined = optionsRand[i];
-                    if (index && options[index]?.option === content) {
-                        optionsRand.splice(i, 1);
-                        break;
+                // handle random option method removal
+                const selectionMethod: HTMLSelectElement | null = document.querySelector('#selection-method');
+                if (selectionMethod) {
+                    const methodStr: string = selectionMethod.value;
+                    if (methodStr === methods[2]?.value) {
+                        console.log('ran');
+                        // remove from optionsRand
+                        let idx: number = 0; // index in optionsRand that is the index of element removed from options
+                        for (let i = 0; i < optionsRand.length; i++) {
+                            const index: number | undefined = optionsRand[i];
+                            if (index && index === opIdx) {
+                                optionsRand.splice(i, 1); // remove that index
+                                idx = i;
+                                break;
+                            }
+                        }
+                        // subtract 1 from all option indexes in optionsRand greater than opIdx
+                        for (let i = 0; i < optionsRand.length; i++) {
+                            const index: number | undefined = optionsRand[i];
+                            if (index && index > opIdx) {
+                                optionsRand[i] = index - 1;
+                            }
+                        }
+                        // cycle back at end
+                        // if (optionsIndex > optionsRand.length - 1) {
+                        //     optionsIndex = 0;
+                        // }
+
                     }
-                }
-                if (optionsIndex > optionsRand.length - 1) {
-                    optionsIndex = 0;
                 }
                 root.remove();
                 renderOptions();

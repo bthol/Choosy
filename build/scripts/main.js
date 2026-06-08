@@ -11,6 +11,7 @@ var optionColorsIndex = 0;
 var optionsIndex = 0;
 var options = [];
 var optionsRand = [];
+var controller = new AbortController();
 function validCostBenefitInput(event) {
     var _a;
     var target = event.target;
@@ -73,21 +74,8 @@ function renderOptions() {
     var _a, _b, _c;
     var optionsContainer = document.querySelector('.options-container');
     if (optionsContainer) {
-        document.querySelectorAll('.remove-option-btn').forEach(function (btn) {
-            btn.removeEventListener('click', removeOption);
-        });
-        document.querySelectorAll('.option-backward-btn').forEach(function (btn) {
-            btn.removeEventListener('click', optionBackward);
-        });
-        document.querySelectorAll('.option-forward-btn').forEach(function (btn) {
-            btn.removeEventListener('click', optionForward);
-        });
-        document.querySelectorAll('.cost-input').forEach(function (input) {
-            input.removeEventListener('input', validCostBenefitInput);
-        });
-        document.querySelectorAll('.benefit-input').forEach(function (input) {
-            input.removeEventListener('input', validCostBenefitInput);
-        });
+        controller.abort();
+        controller = new AbortController();
         var selectionMethod_1 = document.querySelector('#selection-method');
         optionColorsIndex = 0;
         optionsContainer.innerHTML = '';
@@ -170,19 +158,19 @@ function renderOptions() {
             optionsContainer.appendChild(optionElement);
         }
         document.querySelectorAll('.remove-option-btn').forEach(function (btn) {
-            btn.addEventListener('click', removeOption, { once: true });
+            btn.addEventListener('click', removeOption, { once: true, signal: controller.signal });
         });
         document.querySelectorAll('.option-backward-btn').forEach(function (btn) {
-            btn.addEventListener('click', optionBackward);
+            btn.addEventListener('click', optionBackward, { signal: controller.signal });
         });
         document.querySelectorAll('.option-forward-btn').forEach(function (btn) {
-            btn.addEventListener('click', optionForward);
+            btn.addEventListener('click', optionForward, { signal: controller.signal });
         });
         document.querySelectorAll('.cost-input').forEach(function (input) {
-            input.addEventListener('input', validCostBenefitInput);
+            input.addEventListener('input', validCostBenefitInput, { signal: controller.signal });
         });
         document.querySelectorAll('.benefit-input').forEach(function (input) {
-            input.addEventListener('input', validCostBenefitInput);
+            input.addEventListener('input', validCostBenefitInput, { signal: controller.signal });
         });
     }
     else {
@@ -275,7 +263,6 @@ function selectOption() {
                 document.querySelectorAll('.cost-input').forEach(function (input, index) {
                     if (input && options[index]) {
                         var inputElement = input;
-                        console.log(inputElement.value);
                         if (inputElement.value !== '') {
                             options[index].cost = Number(inputElement.value);
                         }
@@ -336,7 +323,7 @@ function selectOption() {
                             optionsRandomizeOrder();
                             var first = optionsRand[0];
                             var count = 0;
-                            while (count < 100 && first && last && first === last) {
+                            while (count < 1000 && first && last && first === last) {
                                 optionsRandomizeOrder();
                                 first = optionsRand[0];
                                 count++;
@@ -370,21 +357,35 @@ function removeOption(event) {
             var div = root.querySelector('.option-text-element');
             if (div) {
                 var content = div.textContent;
+                var opIdx = 0;
                 for (var i = 0; i < options.length; i++) {
                     if (((_b = options[i]) === null || _b === void 0 ? void 0 : _b.option) === content) {
                         options.splice(i, 1);
+                        opIdx = i;
                         break;
                     }
                 }
-                for (var i = 0; i < optionsRand.length; i++) {
-                    var index = optionsRand[i];
-                    if (index && ((_c = options[index]) === null || _c === void 0 ? void 0 : _c.option) === content) {
-                        optionsRand.splice(i, 1);
-                        break;
+                var selectionMethod_3 = document.querySelector('#selection-method');
+                if (selectionMethod_3) {
+                    var methodStr = selectionMethod_3.value;
+                    if (methodStr === ((_c = methods[2]) === null || _c === void 0 ? void 0 : _c.value)) {
+                        console.log('ran');
+                        var idx = 0;
+                        for (var i = 0; i < optionsRand.length; i++) {
+                            var index = optionsRand[i];
+                            if (index && index === opIdx) {
+                                optionsRand.splice(i, 1);
+                                idx = i;
+                                break;
+                            }
+                        }
+                        for (var i = 0; i < optionsRand.length; i++) {
+                            var index = optionsRand[i];
+                            if (index && index > opIdx) {
+                                optionsRand[i] = index - 1;
+                            }
+                        }
                     }
-                }
-                if (optionsIndex > optionsRand.length - 1) {
-                    optionsIndex = 0;
                 }
                 root.remove();
                 renderOptions();
@@ -541,7 +542,7 @@ function renderPage(pageNumber) {
             var selectionOptionBtn_1 = document.querySelector('#select-option-btn');
             var addOptionBtn_1 = document.querySelector('#add-option-btn');
             var clearOPtionsBtn_1 = document.querySelector('#clear-options-btn');
-            var selectionMethod_3 = document.querySelector('#selection-method');
+            var selectionMethod_4 = document.querySelector('#selection-method');
             var optionField_1 = document.querySelector('#option-field');
             if (selectionOptionBtn_1 && addOptionBtn_1 && clearOPtionsBtn_1) {
                 selectionOptionBtn_1.addEventListener('click', selectOption);
@@ -551,11 +552,11 @@ function renderPage(pageNumber) {
             else {
                 console.error('ERROR: Button(s) not found');
             }
-            if (selectionMethod_3) {
-                selectionMethod_3.addEventListener('change', function () {
+            if (selectionMethod_4) {
+                selectionMethod_4.addEventListener('change', function () {
                     var _a;
                     if (options && options.length > 0) {
-                        if (selectionMethod_3.value === 'random-order' || selectionMethod_3.value === ((_a = methods[methods.length - 2]) === null || _a === void 0 ? void 0 : _a.value)) {
+                        if (selectionMethod_4.value === 'random-order' || selectionMethod_4.value === ((_a = methods[methods.length - 2]) === null || _a === void 0 ? void 0 : _a.value)) {
                             optionsRandomizeOrder();
                         }
                         renderOptions();
