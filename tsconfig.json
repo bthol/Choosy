@@ -7,10 +7,12 @@
 
     "allowJs": false,
 
+    "removeComments": true,
+
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     
-    "module": "none",
+    // "module": "none",
     
     // "module": "es2015",
     // "emitDeclarationOnly": true,

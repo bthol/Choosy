@@ -2,10 +2,10 @@
 ;
 var optionColors = ['hsla(0, 98%, 72%, 1.00)', 'hsla(100, 98%, 42%, 1.00)', 'hsla(240, 98%, 77%, 1.00)'];
 var methods = [
-    { value: 'benefit-cost-ratio', text: 'highest benefit cost ratio' },
-    { value: 'net-benefit', text: 'highest net benefit' },
-    { value: 'random-order', text: 'random order of options' },
-    { value: 'random-option', text: 'select a random option' }
+    { value: 'benefit-cost-ratio', text: 'highest benefit cost ratio', select: false },
+    { value: 'net-benefit', text: 'highest net benefit', select: false },
+    { value: 'random-order', text: 'random order of options', select: true },
+    { value: 'random-option', text: 'select a random option', select: false }
 ];
 var optionColorsIndex = 0;
 var optionsIndex = 0;
@@ -73,7 +73,6 @@ function renderOptions() {
     var _a, _b, _c;
     var optionsContainer = document.querySelector('.options-container');
     if (optionsContainer) {
-        // clean up listeners
         document.querySelectorAll('.remove-option-btn').forEach(function (btn) {
             btn.removeEventListener('click', removeOption);
         });
@@ -89,14 +88,10 @@ function renderOptions() {
         document.querySelectorAll('.benefit-input').forEach(function (input) {
             input.removeEventListener('input', validCostBenefitInput);
         });
-        // get user data for conditional option formatting
         var selectionMethod_1 = document.querySelector('#selection-method');
-        // init color index + clear old option elements
         optionColorsIndex = 0;
         optionsContainer.innerHTML = '';
-        // add new option elements
         for (var i = 0; i < options.length; i++) {
-            // build option
             var optionElement = document.createElement('div');
             optionElement.setAttribute('class', 'list-option-style');
             optionElement.setAttribute('style', "background-color:".concat(optionColors[optionColorsIndex]));
@@ -104,7 +99,6 @@ function renderOptions() {
             if (optionColorsIndex === optionColors.length) {
                 optionColorsIndex = 0;
             }
-            // add remove button
             var removeBTN = document.createElement('button');
             removeBTN.setAttribute('type', 'button');
             removeBTN.setAttribute('class', 'remove-option-btn remove-option-btn-style');
@@ -112,12 +106,10 @@ function renderOptions() {
             removeIcon.setAttribute('class', 'fa-solid fa-x fa-sm remove-option-btn');
             removeBTN.appendChild(removeIcon);
             optionElement.appendChild(removeBTN);
-            // add text content
             var textDiv = document.createElement('div');
             textDiv.setAttribute('class', 'option-text-element');
             textDiv.innerText = "".concat((_a = options[i]) === null || _a === void 0 ? void 0 : _a.option);
             optionElement.appendChild(textDiv);
-            // add backward button
             var backBTN = document.createElement('button');
             backBTN.setAttribute('type', 'button');
             backBTN.setAttribute('class', 'option-backward-btn option-backward-btn-style');
@@ -125,7 +117,6 @@ function renderOptions() {
             backIcon.setAttribute('class', 'fa fa-arrow-left option-backward-btn');
             backBTN.appendChild(backIcon);
             optionElement.appendChild(backBTN);
-            // add forward button
             var forwardBTN = document.createElement('button');
             forwardBTN.setAttribute('type', 'button');
             forwardBTN.setAttribute('class', 'option-forward-btn option-forward-btn-style');
@@ -133,12 +124,9 @@ function renderOptions() {
             forwardIcon.setAttribute('class', 'fa fa-arrow-right option-forward-btn');
             forwardBTN.appendChild(forwardIcon);
             optionElement.appendChild(forwardBTN);
-            // add conditional formatting
             if (selectionMethod_1 !== null) {
                 if (selectionMethod_1.value === ((_b = methods[0]) === null || _b === void 0 ? void 0 : _b.value)) {
-                    // get data for rendering
                     var dat = options[i];
-                    // add cost input
                     var costInput = document.createElement('input');
                     costInput.setAttribute('type', 'text');
                     costInput.setAttribute('placeholder', 'cost');
@@ -147,7 +135,6 @@ function renderOptions() {
                         costInput.setAttribute('value', "".concat(dat.cost));
                     }
                     optionElement.appendChild(costInput);
-                    // add benefit input
                     var benefitInput = document.createElement('input');
                     benefitInput.setAttribute('type', 'text');
                     benefitInput.setAttribute('placeholder', 'benefit');
@@ -158,9 +145,7 @@ function renderOptions() {
                     optionElement.appendChild(benefitInput);
                 }
                 else if (selectionMethod_1.value === ((_c = methods[1]) === null || _c === void 0 ? void 0 : _c.value)) {
-                    // get data for rendering
                     var dat = options[i];
-                    // add cost input
                     var costInput = document.createElement('input');
                     costInput.setAttribute('type', 'text');
                     costInput.setAttribute('placeholder', 'cost');
@@ -169,7 +154,6 @@ function renderOptions() {
                         costInput.setAttribute('value', "".concat(dat.cost));
                     }
                     optionElement.appendChild(costInput);
-                    // add benefit input
                     var benefitInput = document.createElement('input');
                     benefitInput.setAttribute('type', 'text');
                     benefitInput.setAttribute('placeholder', 'benefit');
@@ -183,10 +167,8 @@ function renderOptions() {
             else {
                 console.error('ERROR: conditional feature of option could not render');
             }
-            // append option to options container
             optionsContainer.appendChild(optionElement);
         }
-        // add new listeners
         document.querySelectorAll('.remove-option-btn').forEach(function (btn) {
             btn.addEventListener('click', removeOption, { once: true });
         });
@@ -245,7 +227,7 @@ function selectOption() {
         var selectionMethod_2 = document.querySelector('#selection-method');
         if (selectionMethod_2 && selectedDisplay_1) {
             var methodStr = selectionMethod_2.value;
-            if (methodStr === ((_a = methods[0]) === null || _a === void 0 ? void 0 : _a.value)) { // benefit cost ratio
+            if (methodStr === ((_a = methods[0]) === null || _a === void 0 ? void 0 : _a.value)) {
                 var error_1 = false;
                 document.querySelectorAll('.cost-input').forEach(function (input, index) {
                     if (input && options[index]) {
@@ -288,7 +270,7 @@ function selectOption() {
                     }
                 }
             }
-            else if (methodStr === ((_e = methods[1]) === null || _e === void 0 ? void 0 : _e.value)) { // net benefit
+            else if (methodStr === ((_e = methods[1]) === null || _e === void 0 ? void 0 : _e.value)) {
                 var error_2 = false;
                 document.querySelectorAll('.cost-input').forEach(function (input, index) {
                     if (input && options[index]) {
@@ -332,8 +314,11 @@ function selectOption() {
                     }
                 }
             }
-            else if (methodStr === ((_j = methods[methods.length - 2]) === null || _j === void 0 ? void 0 : _j.value)) { // 'random-order'
+            else if (methodStr === ((_j = methods[methods.length - 2]) === null || _j === void 0 ? void 0 : _j.value)) {
                 if (optionsRand) {
+                    if (optionsRand.length === 0) {
+                        optionsRandomizeOrder();
+                    }
                     var index = optionsRand[optionsIndex];
                     if (index !== undefined) {
                         var choice_1 = (_k = options[index]) === null || _k === void 0 ? void 0 : _k.option;
@@ -344,9 +329,18 @@ function selectOption() {
                                 selectedDisplay_1.setAttribute('style', "background-color: ".concat(optionColors[index % optionColors.length]));
                             }
                         });
-                        optionsIndex += 1;
+                        optionsIndex++;
                         if (optionsIndex === optionsRand.length) {
+                            var last = optionsRand[optionsIndex - 1];
                             optionsIndex = 0;
+                            optionsRandomizeOrder();
+                            var first = optionsRand[0];
+                            var count = 0;
+                            while (count < 100 && first && last && first === last) {
+                                optionsRandomizeOrder();
+                                first = optionsRand[0];
+                                count++;
+                            }
                         }
                     }
                     else {
@@ -354,7 +348,7 @@ function selectOption() {
                     }
                 }
             }
-            else if (methodStr === ((_l = methods[methods.length - 1]) === null || _l === void 0 ? void 0 : _l.value)) { // 'random-option'
+            else if (methodStr === ((_l = methods[methods.length - 1]) === null || _l === void 0 ? void 0 : _l.value)) {
                 var i = Math.floor(Math.random() * options.length);
                 selectedDisplay_1.innerHTML = "<div class=\"option-text-element\">".concat((_m = options[i]) === null || _m === void 0 ? void 0 : _m.option, "</div>");
                 selectedDisplay_1.setAttribute('style', "background-color: ".concat(optionColors[i % optionColors.length]));
@@ -495,18 +489,14 @@ function addOption() {
 }
 ;
 function renderPage(pageNumber) {
-    if (pageNumber === 0) { // choose page
+    if (pageNumber === 0) {
         var main = document.querySelector('main');
         if (main) {
-            // clear data
             options = [];
             optionsRand = [];
-            // restore default indices
             optionsIndex = 0;
             optionColorsIndex = 0;
-            // clear page
             main.innerHTML = '';
-            // build page
             var section1 = document.createElement('section');
             section1.setAttribute('class', 'section-separate-style section-margins');
             var pageTitle = document.createElement('h2');
@@ -516,7 +506,12 @@ function renderPage(pageNumber) {
             var div1HTML = '<label for="selection-method">Selection Method: </label> <div> <select name="selection-method" id="selection-method" class="generic-input-style">';
             for (var _i = 0, methods_1 = methods; _i < methods_1.length; _i++) {
                 var obj = methods_1[_i];
-                div1HTML += "<option value=\"".concat(obj === null || obj === void 0 ? void 0 : obj.value, "\">").concat(obj === null || obj === void 0 ? void 0 : obj.text, "</option>");
+                if (obj.select === true) {
+                    div1HTML += "<option value=\"".concat(obj === null || obj === void 0 ? void 0 : obj.value, "\" selected>").concat(obj === null || obj === void 0 ? void 0 : obj.text, "</option>");
+                }
+                else {
+                    div1HTML += "<option value=\"".concat(obj === null || obj === void 0 ? void 0 : obj.value, "\">").concat(obj === null || obj === void 0 ? void 0 : obj.text, "</option>");
+                }
             }
             div1HTML += '</select></div>';
             div1.innerHTML = div1HTML;
@@ -543,13 +538,11 @@ function renderPage(pageNumber) {
             section2.appendChild(div6);
             main.appendChild(section1);
             main.appendChild(section2);
-            // scan page
             var selectionOptionBtn_1 = document.querySelector('#select-option-btn');
             var addOptionBtn_1 = document.querySelector('#add-option-btn');
             var clearOPtionsBtn_1 = document.querySelector('#clear-options-btn');
             var selectionMethod_3 = document.querySelector('#selection-method');
             var optionField_1 = document.querySelector('#option-field');
-            // add listeners
             if (selectionOptionBtn_1 && addOptionBtn_1 && clearOPtionsBtn_1) {
                 selectionOptionBtn_1.addEventListener('click', selectOption);
                 addOptionBtn_1.addEventListener('click', addOption);
@@ -561,15 +554,14 @@ function renderPage(pageNumber) {
             if (selectionMethod_3) {
                 selectionMethod_3.addEventListener('change', function () {
                     var _a;
-                    if (selectionMethod_3.value === 'random-order') {
-                        optionsRandomizeOrder();
-                    }
-                    if (selectionMethod_3.value === ((_a = methods[methods.length - 2]) === null || _a === void 0 ? void 0 : _a.value)) {
-                        optionsRandomizeOrder();
-                    }
-                    renderOptions();
-                    if (optionField_1) {
-                        optionField_1.focus();
+                    if (options && options.length > 0) {
+                        if (selectionMethod_3.value === 'random-order' || selectionMethod_3.value === ((_a = methods[methods.length - 2]) === null || _a === void 0 ? void 0 : _a.value)) {
+                            optionsRandomizeOrder();
+                        }
+                        renderOptions();
+                        if (optionField_1) {
+                            optionField_1.focus();
+                        }
                     }
                 });
             }
@@ -592,8 +584,7 @@ function renderPage(pageNumber) {
             console.error('ERROR: main node not found');
         }
     }
-    else if (pageNumber === 1) { // manual page
-        // clean up listners
+    else if (pageNumber === 1) {
         var selectionOptionBtn_2 = document.querySelector('#select-option-btn');
         if (selectionOptionBtn_2) {
             selectionOptionBtn_2.removeEventListener('click', selectOption);
@@ -608,22 +599,16 @@ function renderPage(pageNumber) {
         }
         var main = document.querySelector('main');
         if (main) {
-            // clear data
             options = [];
             optionsRand = [];
-            // restore default indices
             optionsIndex = 0;
             optionColorsIndex = 0;
-            // clear page
             main.innerHTML = '';
-            // build page
             var section1 = document.createElement('section');
             section1.setAttribute('class', 'section-separate-style');
             var pageTitle = document.createElement('h2');
             pageTitle.innerText = 'Manual';
             var p1 = document.createElement('p');
-            // <p><b>1.)</b></p>
-            // <p><b>1.)</b></p>
             p1.innerHTML = '<b>1.)</b> Choose the selection method you want using the drop down menu.';
             var p2 = document.createElement('p');
             p2.innerHTML = '<b>2.)</b> Enter each option name into the options field and hit enter or click the add button';
@@ -645,8 +630,7 @@ function renderPage(pageNumber) {
             console.error('ERROR: main node not found');
         }
     }
-    else if (pageNumber === 2) { // about page
-        // clean up listners
+    else if (pageNumber === 2) {
         var selectionOptionBtn_3 = document.querySelector('#select-option-btn');
         if (selectionOptionBtn_3) {
             selectionOptionBtn_3.removeEventListener('click', selectOption);
@@ -661,15 +645,11 @@ function renderPage(pageNumber) {
         }
         var main = document.querySelector('main');
         if (main) {
-            // clear data
             options = [];
             optionsRand = [];
-            // restore default indices
             optionsIndex = 0;
             optionColorsIndex = 0;
-            // clear page
             main.innerHTML = '';
-            // build page
             var section1 = document.createElement('section');
             section1.setAttribute('class', 'section-separate-style');
             var pageTitle = document.createElement('h2');

@@ -4,11 +4,11 @@ interface optionInterface {
     benefit?: number
 };
 const optionColors: string[] = ['hsla(0, 98%, 72%, 1.00)', 'hsla(100, 98%, 42%, 1.00)', 'hsla(240, 98%, 77%, 1.00)'];
-const methods: {value: string, text: string}[] = [
-    {value: 'benefit-cost-ratio', text: 'highest benefit cost ratio'},
-    {value: 'net-benefit', text: 'highest net benefit'},
-    {value: 'random-order', text: 'random order of options'},
-    {value: 'random-option', text: 'select a random option'}
+const methods: {value: string, text: string, select: boolean}[] = [ // only select one option as default
+    {value: 'benefit-cost-ratio', text: 'highest benefit cost ratio', select: false},
+    {value: 'net-benefit', text: 'highest net benefit', select: false},
+    {value: 'random-order', text: 'random order of options', select: true},
+    {value: 'random-option', text: 'select a random option', select: false}
 ];
 let optionColorsIndex: number = 0;
 let optionsIndex: number = 0;
@@ -317,6 +317,10 @@ function selectOption(): void {
                 }
             } else if (methodStr === methods[methods.length - 2]?.value) { // 'random-order'
                 if (optionsRand) {
+                    if (optionsRand.length === 0) {
+                        // randomize order if method switch to random order before option addition
+                        optionsRandomizeOrder();
+                    }
                     const index: number | undefined = optionsRand[optionsIndex];
                     if (index !== undefined) {
                         const choice: string | undefined = options[index]?.option;
@@ -327,9 +331,20 @@ function selectOption(): void {
                                 selectedDisplay.setAttribute('style', `background-color: ${optionColors[index % optionColors.length]}`);
                             }
                         });
-                        optionsIndex += 1;
+                        optionsIndex++;
                         if (optionsIndex === optionsRand.length) {
+                            // randomize order at end of options
+                            const last: number | undefined = optionsRand[optionsIndex - 1];
                             optionsIndex = 0;
+                            optionsRandomizeOrder();
+                            let first: number | undefined = optionsRand[0];
+                            let count = 0; // limit number of attempts to prevent double option
+                            while (count < 100 && first && last && first === last) {
+                                // randomize until there is no double option
+                                optionsRandomizeOrder();
+                                first = optionsRand[0];
+                                count++;
+                            }
                         }
                     } else {
                         console.error('ERROR: data not found at index during selection');
@@ -355,12 +370,14 @@ function removeOption(event: Event): void {
             const div: HTMLElement | null = root.querySelector('.option-text-element');
             if (div) {
                 const content: string = div.textContent;
+                // remove options
                 for (let i = 0; i < options.length; i++) {
                     if (options[i]?.option === content) {
                         options.splice(i, 1);
                         break;
                     }
                 }
+                // remove from optionsRand
                 for (let i = 0; i < optionsRand.length; i++) {
                     const index: number | undefined = optionsRand[i];
                     if (index && options[index]?.option === content) {
@@ -485,7 +502,11 @@ function renderPage(pageNumber: Number) {
             div1.setAttribute('class', 'row-space');
             let div1HTML: string = '<label for="selection-method">Selection Method: </label> <div> <select name="selection-method" id="selection-method" class="generic-input-style">';
             for (const obj of methods) {
-                div1HTML += `<option value="${obj?.value}">${obj?.text}</option>`;
+                if (obj.select === true) {
+                    div1HTML += `<option value="${obj?.value}" selected>${obj?.text}</option>`;
+                } else {
+                    div1HTML += `<option value="${obj?.value}">${obj?.text}</option>`;
+                }
             }
             div1HTML += '</select></div>';
             div1.innerHTML = div1HTML;
@@ -528,15 +549,14 @@ function renderPage(pageNumber: Number) {
             }
             if (selectionMethod) {
                 selectionMethod.addEventListener('change', () => {
-                    if (selectionMethod.value === 'random-order') {
-                        optionsRandomizeOrder();
-                    }
-                    if (selectionMethod.value === methods[methods.length - 2]?.value) {
-                        optionsRandomizeOrder();
-                    }
-                    renderOptions();
-                    if (optionField) {
-                        optionField.focus();
+                    if (options && options.length > 0) {
+                        if (selectionMethod.value === 'random-order' || selectionMethod.value === methods[methods.length - 2]?.value) {
+                            optionsRandomizeOrder();
+                        }
+                        renderOptions();
+                        if (optionField) {
+                            optionField.focus();
+                        }
                     }
                 });
             }
